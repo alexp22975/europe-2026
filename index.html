@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Europe 2026 — Trip Itineraries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --route1: #1a3a5c;
+    --route1-mid: #2e6da4;
+    --route1-light: #d6e9f8;
+    --route1-pale: #f0f7ff;
+    --route2: #1a4a35;
+    --route2-mid: #2d8a5e;
+    --route2-light: #d0f0e0;
+    --route2-pale: #f0faf5;
+    --amber: #b35a00;
+    --amber-light: #fff3e0;
+    --gold: #c9920a;
+    --ink: #1c1c1c;
+    --muted: #555;
+    --faint: #888;
+    --border: #e0e0e0;
+    --surface: #f8f8f6;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--ink);
+    background: #fafaf8;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    color: var(--white);
+    padding: 80px 24px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(46,109,164,0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(45,138,94,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 em { font-style: italic; color: rgba(255,255,255,0.7); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+    margin: 0 auto 40px;
+  }
+  .hero-chips {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .chip-blue { background: rgba(46,109,164,0.3); color: #a8d4f5; border: 1px solid rgba(46,109,164,0.4); }
+  .chip-green { background: rgba(45,138,94,0.3); color: #a0e0c0; border: 1px solid rgba(45,138,94,0.4); }
+  .chip-gold { background: rgba(201,146,10,0.25); color: #f0c560; border: 1px solid rgba(201,146,10,0.3); }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(28,28,28,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+  .nav-btn {
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    border-bottom: 2px solid transparent;
+    text-transform: uppercase;
+  }
+  .nav-btn:hover { color: rgba(255,255,255,0.8); }
+  .nav-btn.active-r1 { color: #7ec8f0; border-bottom-color: #2e6da4; }
+  .nav-btn.active-r2 { color: #7ee8b0; border-bottom-color: #2d8a5e; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── ROUTE SECTION ── */
+  .route-section { padding: 60px 0 40px; display: none; }
+  .route-section.visible { display: block; }
+
+  .route-header {
+    border-radius: 16px;
+    padding: 40px 40px 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .route-header::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+  .rh-r1 { background: var(--route1); color: white; }
+  .rh-r1::after { background: white; }
+  .rh-r2 { background: var(--route2); color: white; }
+  .rh-r2::after { background: white; }
+  .route-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .route-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .route-path {
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .route-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .mp-r1 { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .mp-r2 { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }
+  .mp-flight { background: rgba(255,200,50,0.2); color: #ffd97a; border: 1px solid rgba(255,200,50,0.3); }
+  .mp-warn { background: rgba(255,120,50,0.2); color: #ffb07a; border: 1px solid rgba(255,120,50,0.3); }
+
+  /* ── OVERVIEW NOTE ── */
+  .overview-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .overview-box p + p { margin-top: 10px; }
+
+  /* ── DAYS ── */
+  .day-card {
+    margin-bottom: 28px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--white);
+    transition: box-shadow 0.2s;
+  }
+  .day-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+
+  .day-header {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .day-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    text-align: center;
+  }
+  .dp-r1 { background: var(--route1); color: white; }
+  .dp-r2 { background: var(--route2); color: white; }
+  .dp-flight { background: #c9920a; color: white; }
+  .day-num-label { font-size: 9px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; }
+  .day-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1; font-weight: 600; }
+  .day-date-label { font-size: 10px; opacity: 0.65; margin-top: 2px; }
+
+  .day-title-wrap {
+    padding: 18px 20px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+  }
+  .day-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .day-city {
+    font-size: 12px;
+    color: var(--faint);
+    font-style: italic;
+    margin-top: 3px;
+  }
+  .expand-icon {
+    font-size: 18px;
+    color: var(--faint);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .day-card.open .expand-icon { transform: rotate(180deg); }
+
+  .day-body { display: none; padding: 0 0 4px; }
+  .day-card.open .day-body { display: block; }
+
+  /* transport strip */
+  .transport-strip {
+    background: #eaf4fc;
+    border-bottom: 1px solid #c6dff0;
+    border-top: 1px solid #c6dff0;
+    padding: 10px 20px;
+    font-size: 13px;
+    color: #1a4a6e;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .transport-strip-green {
+    background: #e8f6ee;
+    border-bottom: 1px solid #b8dfc8;
+    border-top: 1px solid #b8dfc8;
+    color: #1a4a2e;
+  }
+  .transport-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+
+  /* section blocks */
+  .section-block { padding: 18px 20px 4px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sl-r1 { color: var(--route1-mid); border-color: var(--route1-light); }
+  .sl-r2 { color: var(--route2-mid); border-color: var(--route2-light); }
+  .sl-amber { color: var(--amber); border-color: #f5d9b0; }
+
+  .activity-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .activity-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .ad-r1 { background: var(--route1-mid); }
+  .ad-r2 { background: var(--route2-mid); }
+  .ad-amber { background: var(--gold); }
+  .activity-name { font-weight: 500; color: var(--ink); }
+  .activity-desc { color: var(--muted); }
+
+  /* food box */
+  .food-box {
+    margin: 12px 20px 20px;
+    background: var(--amber-light);
+    border: 1px solid #f0d090;
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .food-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+  .food-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .food-bullet { color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .food-text { color: #4a3510; }
+
+  /* flight callout */
+  .flight-callout {
+    margin: 12px 20px 20px;
+    background: #fff8e1;
+    border: 1px solid #ffd54f;
+    border-left: 3px solid #c9920a;
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .fc-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 6px;
+  }
+  .fc-text { font-size: 14px; color: #4a3000; line-height: 1.65; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 40px 24px;
+    font-size: 13px;
+    margin-top: 60px;
+  }
+  footer strong { color: rgba(255,255,255,0.7); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 540px) {
+    .hero { padding: 60px 16px 48px; }
+    .route-header { padding: 28px 20px 24px; }
+    .container { padding: 0 16px; }
+    .day-pill { width: 72px; }
+    .day-num { font-size: 1.8rem; }
+    .route-section { padding: 40px 0 24px; }
+  }
+
+  /* ── ANIMATION ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .route-section.visible .day-card {
+    animation: fadeUp 0.4s ease both;
+  }
+  .route-section.visible .day-card:nth-child(2) { animation-delay: 0.05s; }
+  .route-section.visible .day-card:nth-child(3) { animation-delay: 0.1s; }
+  .route-section.visible .day-card:nth-child(4) { animation-delay: 0.15s; }
+  .route-section.visible .day-card:nth-child(5) { animation-delay: 0.2s; }
+  .route-section.visible .day-card:nth-child(6) { animation-delay: 0.25s; }
+  .route-section.visible .day-card:nth-child(7) { animation-delay: 0.3s; }
+  .route-section.visible .day-card:nth-child(8) { animation-delay: 0.35s; }
+  .route-section.visible .day-card:nth-child(9) { animation-delay: 0.4s; }
+  .route-section.visible .day-card:nth-child(10) { animation-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Europe 2026 &mdash; June 20&ndash;29</div>
+  <h1>Two Routes.<br><em>One Summer.</em></h1>
+  <p class="hero-sub">Day-by-day itineraries for Spain &amp; Portugal and Croatia &amp; Greece &mdash; leaving Milan June 20, flying home June 29.</p>
+  <div class="hero-chips">
+    <span class="chip chip-blue">Option 1 &mdash; Spain + Portugal</span>
+    <span class="chip chip-green">Option 2 &mdash; Croatia + Greece</span>
+    <span class="chip chip-gold">Delta flight home Jun 29</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <button class="nav-btn active-r1" id="btn-r1" onclick="showRoute(1)">Option 1 &mdash; Spain + Portugal</button>
+  <button class="nav-btn" id="btn-r2" onclick="showRoute(2)">Option 2 &mdash; Croatia + Greece</button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     ROUTE 1 — SPAIN + PORTUGAL
+═══════════════════════════════════════════════ -->
+<div class="route-section visible" id="route1">
+<div class="container">
+
+  <div class="route-header rh-r1">
+    <div class="route-eyebrow">Option 1</div>
+    <h2>Spain + Portugal</h2>
+    <div class="route-path">Milan &rarr; Lisbon &rarr; Porto &rarr; Seville &rarr; Madrid &rarr; Home</div>
+    <div class="route-meta">
+      <span class="meta-pill mp-r1">9 Days &middot; Jun 20&ndash;28</span>
+      <span class="meta-pill mp-r1">June 20 &mdash; Leave Milan</span>
+      <span class="meta-pill mp-warn">&#9992; Jun 29 &mdash; Madrid MAD &rarr; ATL (connecting)</span>
+    </div>
+  </div>
+
+  <div class="overview-box">
+    <p><strong>Atlantic culture, fado and flamenco, wine caves, tapas, Roman history, Islamic architecture, coastal cities.</strong> This route moves west to east through the Iberian Peninsula &mdash; two days in each city with a relaxed enough pace to actually feel each place.</p>
+    <p><strong>Flight home note:</strong> Delta does not operate a nonstop from Madrid to Atlanta. Your best options are a Delta/Air France codeshare via Paris CDG, or Delta via JFK. Book the earliest morning departure from MAD on June 29. Metro Line 8 to Barajas T4, ~40 min.</p>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">1</span><span class="day-date-label">Jun 20</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Fly Milan &rarr; Lisbon | Arrive &amp; Explore</div><div class="day-city">Lisbon, Portugal</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip"><span class="transport-icon">&#9992;</span><span><strong>Milan MXP &rarr; Lisbon LIS</strong> &mdash; Ryanair/Vueling, ~2.5 hrs, ~&euro;40&ndash;60. Book ahead.</span></div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Arrive Lisbon:</span> <span class="activity-desc">Land at Humberto Delgado Airport. Metro Red Line to Alameda, change to Green Line for Rossio (~30 min, &euro;1.65). Drop bags at hostel.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Miradouro da Graca:</span> <span class="activity-desc">Highest viewpoint in Lisbon &mdash; 360-degree view over the city&rsquo;s terracotta rooftops, the Tagus River, and the Christ the King statue. Go at sunset.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Alfama neighborhood:</span> <span class="activity-desc">Lisbon&rsquo;s oldest district built on a hillside. Labyrinthine streets, tiled azulejo facades, laundry on balconies. Walk without a plan &mdash; the whole quarter is the attraction.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Fado music:</span> <span class="activity-desc">Alfama is the home of fado &mdash; Portugal&rsquo;s melancholic soul music. Taberna da Rua das Flores or A Baiuca for authentic small-room fado with dinner. Book ahead.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Fado meaning:</span> <span class="activity-desc">The word means &ldquo;fate.&rdquo; The music is about longing, loss, and the sea. Even without understanding Portuguese, it hits differently live in a candlelit tavern.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Bacalhau (salt cod)</strong> &mdash; Portugal&rsquo;s national obsession, 365 recipes. Try bacalhau a bras (shredded cod with eggs and potatoes).</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Pasteis de nata</strong> &mdash; custard tarts from Pasteis de Belem (the original since 1837). Warm, with cinnamon and powdered sugar.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Ginjinha</strong> &mdash; sweet cherry liqueur in a tiny chocolate cup at A Ginjinha bar in Rossio Square. &euro;1.50.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Vinho verde</strong> &mdash; young, slightly sparkling Portuguese white wine. Perfect for warm June evenings.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">2</span><span class="day-date-label">Jun 21</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Lisbon Full Day</div><div class="day-city">Lisbon, Portugal</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r1">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Pasteis de Belem:</span> <span class="activity-desc">Take tram 15E to Belem district. The original custard tart bakery (open since 1837) &mdash; queue outside, worth every minute. Order 3, eat them warm with cinnamon.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Torre de Belem:</span> <span class="activity-desc">16th-century fortress on the Tagus River. UNESCO World Heritage &mdash; symbol of Portugal&rsquo;s Age of Exploration. The exterior and river views are the point.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Jeronimos Monastery:</span> <span class="activity-desc">Portugal&rsquo;s most spectacular building. Manueline Gothic architecture built with spice route wealth. The cloister is extraordinary &mdash; carved stone that looks like coral.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">LX Factory:</span> <span class="activity-desc">Former industrial complex turned creative hub. Sunday market with food stalls, vintage clothing, books, and local art. The perfect Lisbon afternoon.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Tram 28:</span> <span class="activity-desc">Lisbon&rsquo;s famous yellow tram winding through the hills, Alfama, and the city center. Genuinely the best way to see the city&rsquo;s geography.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Miradouro de Santa Catarina:</span> <span class="activity-desc">Less touristy viewpoint popular with locals &mdash; guitarists, wine, sunset. Far more relaxed than official viewpoints.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Bairro Alto nightlife:</span> <span class="activity-desc">Lisbon&rsquo;s main bar district. Tiny bars spill onto the streets at night. No cover charge anywhere &mdash; you walk between them. Some of Europe&rsquo;s most accessible nightlife.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Pink Street (Rua Nova do Carvalho):</span> <span class="activity-desc">The famous pink-painted street lined with bars. Busy from 10pm, electric by midnight.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Piri-piri chicken</strong> (Bonjardim restaurant is the classic), arroz de marisco (seafood rice), or a bifana (pork sandwich).</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Craft beer</strong> &mdash; Dois Corvos is Portugal&rsquo;s best craft brewery. Their taproom is in Intendente neighborhood.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Ginjinha and Imperial</strong> (draft beer in small glasses) &mdash; the two drinks you order standing at a bar.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">3</span><span class="day-date-label">Jun 22</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Lisbon &rarr; Porto by Train</div><div class="day-city">Porto, Portugal</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip"><span class="transport-icon">&#128647;</span><span><strong>Lisbon Santa Apolonia &rarr; Porto Campanha</strong> &mdash; Alfa Pendular, ~3 hrs, &euro;25&ndash;40. Book at cp.pt.</span></div>
+      <div class="section-block"><div class="section-label sl-r1">Morning Option</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Sintra (optional):</span> <span class="activity-desc">1 hour by train from Rossio. Fairytale palace town in pine-forested hills. Pena Palace (colorful Romanticist hilltop castle), Quinta da Regaleira (mysterious gardens with initiation wells). Leave by noon to catch the Porto train.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Livraria Lello:</span> <span class="activity-desc">The world-famous bookshop with a curved red Art Nouveau staircase &mdash; inspiration for Harry Potter. Buy a ticket (&euro;5, redeemable against purchase) to avoid the queue.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Dom Luis I Bridge:</span> <span class="activity-desc">Iron double-deck bridge over the Douro. Walk the upper deck for views over Porto and Vila Nova de Gaia. The panorama at golden hour is one of the best in Portugal.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Ribeira district:</span> <span class="activity-desc">Porto&rsquo;s colorful riverside neighborhood &mdash; UNESCO World Heritage. Walk the Cais da Ribeira quay, have coffee in a riverside cafe.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Vila Nova de Gaia wine caves:</span> <span class="activity-desc">Cross the Dom Luis bridge. Lodge caves of every famous port wine house (Taylor&rsquo;s, Graham&rsquo;s, Sandeman) offer tours and tastings for &euro;10&ndash;15. Go before 7pm.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Gaia cable car:</span> <span class="activity-desc">Gondola from the riverbank up to the upper bridge level. Best sunset view in Porto.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Francesinha</strong> &mdash; Porto&rsquo;s signature sandwich. Bread, ham, sausage, steak, covered in melted cheese and spicy tomato-beer sauce, topped with a fried egg. Cafe Santiago is the institution.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Port wine</strong> &mdash; dry white and tawny served chilled at the caves. Not just the sweet red you might know.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Pasteis de Chaves</strong> &mdash; flaky meat pastries from the north. Street food, &euro;1 each.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">4</span><span class="day-date-label">Jun 23</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Porto Full Day</div><div class="day-city">Porto, Portugal</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r1">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Bolhao Market:</span> <span class="activity-desc">Porto&rsquo;s famous restored covered iron market. Fresh fish, vegetables, cheese, flowers. Best 8&ndash;11am. Have a coffee and pastel de nata inside.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Majestic Cafe:</span> <span class="activity-desc">Porto&rsquo;s most ornate cafe, open since 1921. Belle Epoque interior &mdash; gold mirrors, carved wood, marble. Order a galao (milky coffee) and sit for an hour.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Se Cathedral:</span> <span class="activity-desc">Porto&rsquo;s oldest building, 12th century, on the highest point of the old city. The cloister has azulejo tile panels. The views from the terrace are excellent.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Douro Valley day trip (optional):</span> <span class="activity-desc">1.5 hrs by train to Pinhao. The terraced wine valley is one of Europe&rsquo;s most beautiful landscapes. Take the Linha do Douro scenic train and return by evening.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Foz do Douro:</span> <span class="activity-desc">Tram 1 (Porto&rsquo;s historic tram line) to where the Douro meets the Atlantic. Walk the rocky coastline, swim at Praia de Matosinhos (Porto&rsquo;s best beach).</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Street Art Quarter:</span> <span class="activity-desc">Bonfim and Miragaia neighborhoods have major murals by international artists. World-class street art hidden on every corner.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Porto nightlife:</span> <span class="activity-desc">Rua Galeria de Paris and Rua Candido dos Reis &mdash; Porto&rsquo;s bar streets. Less intense than Lisbon, more local feeling. Go at 10pm.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Bacalhau com natas</strong> &mdash; salt cod gratin with cream and potato. One of Portugal&rsquo;s comfort food masterpieces.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Matosinhos seafood</strong> &mdash; Porto&rsquo;s fishing district. Freshest grilled fish in Portugal, at tables on the street.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Super Bock beer</strong> &mdash; Porto&rsquo;s local lager, on tap everywhere. Pairs with everything.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">5</span><span class="day-date-label">Jun 24</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Porto &rarr; Seville</div><div class="day-city">Seville, Spain</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip"><span class="transport-icon">&#9992;</span><span><strong>Porto OPO &rarr; Seville SVQ</strong> &mdash; Vueling or Iberia, ~1.5 hrs, ~&euro;40&ndash;70. No direct train &mdash; flight is the best option.</span></div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Real Alcazar:</span> <span class="activity-desc">The royal palace complex, still a working royal residence. Stunning Mudejar and Gothic architecture, labyrinthine gardens, ornate tilework. UNESCO World Heritage. &euro;14.50, book online.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Seville Cathedral:</span> <span class="activity-desc">The world&rsquo;s largest Gothic cathedral. Climb the Giralda tower (originally a minaret) for rooftop views. Columbus&rsquo;s tomb is inside. &euro;13.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Barrio Santa Cruz:</span> <span class="activity-desc">Seville&rsquo;s old Jewish quarter &mdash; whitewashed walls, orange trees, flower-filled courtyards, narrow lanes. Get lost in it.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Tapas crawl:</span> <span class="activity-desc">Bar Eslava, El Rinconcillo (oldest bar in Seville, 1670), and La Brunilda are classics. Order at the bar, standing &mdash; that&rsquo;s the way.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Flamenco show:</span> <span class="activity-desc">Tablao El Arenal or Casa de la Memoria. Raw, percussive, passionate. Book ahead. ~&euro;35&ndash;45.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Jamon iberico de bellota</strong> &mdash; acorn-fed Iberian ham. Order a platter anywhere.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Gazpacho</strong> &mdash; cold tomato soup drunk as a drink in Andalusia. Refreshing in June heat.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Fino sherry (Jerez)</strong> &mdash; bone-dry fortified wine served cold. The local drink of Andalusia. &euro;2&ndash;3 a glass.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Espinacas con garbanzos</strong> &mdash; spinach and chickpea stew. Seville&rsquo;s iconic tapa, Moorish in origin.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 6 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">6</span><span class="day-date-label">Jun 25</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Seville Full Day</div><div class="day-city">Seville, Spain</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r1">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Plaza de Espana:</span> <span class="activity-desc">Built for the 1929 Ibero-American Exposition &mdash; a vast semicircular palace with tiled alcoves representing every Spanish province. Hire a rowboat on the canal. Free entry.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Parque de Maria Luisa:</span> <span class="activity-desc">Spain&rsquo;s oldest public park. Shady paths, peacocks, fountains. The best place to be in Seville during the June heat.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Torre del Oro:</span> <span class="activity-desc">13th-century golden tower on the Guadalquivir River. Walk the riverside Paseo de Colon.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Metropol Parasol (Las Setas):</span> <span class="activity-desc">The world&rsquo;s largest wooden structure &mdash; giant mushroom-shaped canopy in the center of the old city. Walk the elevated walkway (&euro;3) for rooftop city views.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Siesta culture:</span> <span class="activity-desc">Seville in late June hits 35&deg;C+ by 2pm. From 2&ndash;5pm, the city closes. This is not optional &mdash; join the siesta. Eat a long lunch in a shaded courtyard restaurant.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Golden hour Seville:</span> <span class="activity-desc">At 7pm the city reopens and the light turns golden. Walk from the Alcazar to the Cathedral to the river.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Vermut hour:</span> <span class="activity-desc">From 7&ndash;9pm, Sevillanos drink vermouth with olives at terrace bars. This is pre-dinner &mdash; dinner isn&rsquo;t until 10pm.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Pescaito frito</strong> &mdash; battered and fried small fish. Seville&rsquo;s street food. Best in a paper cone at the mercado.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Carrillada</strong> &mdash; braised pig cheeks in red wine. One of Seville&rsquo;s finest tapas.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Rebujito</strong> &mdash; fino sherry + 7Up over ice. The Seville party drink.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 7 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">7</span><span class="day-date-label">Jun 26</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Seville &rarr; Madrid by AVE</div><div class="day-city">Madrid, Spain</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip"><span class="transport-icon">&#128647;</span><span><strong>Seville Santa Justa &rarr; Madrid Puerta de Atocha</strong> &mdash; AVE high-speed, ~2.5 hrs, &euro;30&ndash;70. Spain&rsquo;s best train route.</span></div>
+      <div class="section-block"><div class="section-label sl-r1">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Last Seville morning:</span> <span class="activity-desc">Morning walk along the Guadalquivir river before the heat. Mercado de Triana for breakfast.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon in Madrid</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Prado Museum:</span> <span class="activity-desc">One of the world&rsquo;s five greatest art museums. Goya&rsquo;s Black Paintings, Velazquez&rsquo;s Las Meninas, El Greco, Raphael, Titian. Book online, free 6&ndash;8pm daily. Allow 2&ndash;3 hours.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Retiro Park:</span> <span class="activity-desc">Madrid&rsquo;s great park, 350 acres. Rowboat on the lake, Crystal Palace pavilion, rose garden in full bloom in late June. Free entry.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Malasana neighborhood:</span> <span class="activity-desc">Madrid&rsquo;s hippest barrio. Street art, craft beer bars, record shops, vintage clothing. Evening starts at 8pm and doesn&rsquo;t end until 5am.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Dinner at 9:30pm:</span> <span class="activity-desc">Casa Lucio for huevos rotos (fried eggs over crispy potatoes) &mdash; Madrid&rsquo;s most famous dish.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Cocido madrile&ntilde;o</strong> &mdash; slow-cooked chickpea stew, served in three courses. Madrid&rsquo;s defining dish.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Bocadillo de calamares</strong> &mdash; fried squid ring sandwich. Madrid&rsquo;s most iconic street food. &euro;3&ndash;4.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Churros con chocolate</strong> &mdash; Chocolateria San Gines is open 24 hours.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 8 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r1"><span class="day-num-label">Day</span><span class="day-num">8</span><span class="day-date-label">Jun 27</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Madrid Full Day</div><div class="day-city">Madrid, Spain</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r1">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Reina Sofia Museum:</span> <span class="activity-desc">Picasso&rsquo;s Guernica in person &mdash; always more powerful than the reproductions. The full painting is enormous. Dali, Miro. Free 7&ndash;9pm. &euro;12 day entry.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Thyssen-Bornemisza:</span> <span class="activity-desc">The third of Madrid&rsquo;s &ldquo;Golden Triangle&rdquo; of museums. Covers D&uuml;rer to Hopper to Lichtenstein. Often the least crowded and most varied.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Mercado de San Miguel:</span> <span class="activity-desc">Upscale glass-and-iron covered market near Plaza Mayor. Gourmet tapas, jamon carved at the counter, wine, oysters, croquetas.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Gran Via:</span> <span class="activity-desc">Madrid&rsquo;s Broadway &mdash; early 20th-century architecture, theatres, flagship stores. Walk the full length from Cibeles to Plaza de Espana.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Azotea del Circulo de Bellas Artes:</span> <span class="activity-desc">Best rooftop view in Madrid. &euro;5 entry. 360 degrees over the city. Go at 7pm for golden hour.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r1">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">La Latina bar crawl:</span> <span class="activity-desc">Calle Cava Baja is lined with traditional mesones. Order media racion (half portion) at each stop and work your way down.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Madrid nightlife:</span> <span class="activity-desc">Clubs don&rsquo;t open until 2am. Kapital (7-floor mega-club), Teatro Barcelo, or Joy Eslava. Madrid is the last night of Europe &mdash; go hard.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Jamon iberico de bellota</strong> &mdash; the best ham in the world, from pigs that eat only acorns.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Patatas bravas</strong> &mdash; fried potatoes with spicy bravas sauce and aioli. Every bar in Madrid has them.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Horchata de chufa</strong> &mdash; chilled tiger nut milk from street kiosks in summer. Refreshing and unique.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 9 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-flight"><span class="day-num-label">Day</span><span class="day-num">9</span><span class="day-date-label">Jun 28</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Madrid &mdash; Final Day | Flight Home Jun 29</div><div class="day-city">Madrid / Barajas MAD</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r1">Final Day Options</div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Toledo day trip:</span> <span class="activity-desc">30 min by high-speed train from Atocha. Medieval walled city on a hilltop &mdash; former capital of the Spanish Empire. Cathedral, synagogues, mosques, and El Greco&rsquo;s house all within walking distance. UNESCO World Heritage.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Bernabeu Stadium:</span> <span class="activity-desc">Real Madrid&rsquo;s stadium. Museum tour available. Worth a half day if you&rsquo;re any kind of football fan.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r1"></div><div><span class="activity-name">Final Madrid morning:</span> <span class="activity-desc">Breakfast at a local bar &mdash; cafe solo (espresso) and a tostada con tomate y aceite (toast with tomato and olive oil). The correct Madrid morning ritual.</span></div></div>
+      </div>
+      <div class="flight-callout">
+        <div class="fc-label">&#9992; Flight Home &mdash; June 29 from MAD</div>
+        <div class="fc-text"><strong>Delta from Madrid:</strong> No nonstop to ATL. Best options: Delta/Air France codeshare via Paris CDG, or Delta via JFK. Flight time ~11&ndash;13 hrs total with connection. Book the earliest morning flight out of MAD.<br><br><strong>Barajas Airport:</strong> Madrid Barajas T4 serves SkyTeam (Delta/Air France). Metro Line 8 from city center, ~40 min, &euro;5.</div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Final Bites</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Tortilla espanola</strong> (Spanish omelette) at a bar near your hostel &mdash; the definitive Spanish breakfast tapa.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Take home:</strong> Chorizo, Manchego cheese from Mercado de San Miguel. All airline-legal if vacuum packed.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Last drink:</strong> Order a clara (lager with lemon) at an outdoor terrace on Gran Via and watch Madrid go by.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /route1 -->
+
+
+<!-- ══════════════════════════════════════════════
+     ROUTE 2 — CROATIA + GREECE
+═══════════════════════════════════════════════ -->
+<div class="route-section" id="route2">
+<div class="container">
+
+  <div class="route-header rh-r2">
+    <div class="route-eyebrow">Option 2</div>
+    <h2>Croatia + Greece</h2>
+    <div class="route-path">Milan &rarr; Split &rarr; Dubrovnik &rarr; Athens &rarr; ATL</div>
+    <div class="route-meta">
+      <span class="meta-pill mp-r2">9 Days &middot; Jun 20&ndash;28</span>
+      <span class="meta-pill mp-r2">June 20 &mdash; Leave Milan</span>
+      <span class="meta-pill mp-flight">&#9992; Jun 29 &mdash; Delta NONSTOP Athens ATH &rarr; ATL</span>
+    </div>
+  </div>
+
+  <div class="overview-box">
+    <p><strong>Roman palaces, Adriatic coast and islands, medieval walled cities, ancient Greek monuments, rooftop bars with 2,500-year-old views.</strong> This route delivers the complete Mediterranean experience &mdash; Croatian coast in the first half, ancient Greece in the second.</p>
+    <p><strong>Flight home advantage:</strong> Delta operates the only nonstop flight between Athens (ATH) and Atlanta (ATL), ~12 hours. A morning departure from Athens arrives in Atlanta the same afternoon &mdash; time zones work in your favor flying west. Book this flight as early as possible.</p>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">1</span><span class="day-date-label">Jun 20</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Fly Milan &rarr; Split | Arrive &amp; First Night</div><div class="day-city">Split, Croatia</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip transport-strip-green"><span class="transport-icon">&#9992;</span><span><strong>Milan MXP &rarr; Split SPU</strong> &mdash; Ryanair/easyJet, ~1 hr, ~&euro;30&ndash;60. Direct route, book ahead.</span></div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Diocletian&rsquo;s Palace:</span> <span class="activity-desc">A 1,700-year-old Roman emperor&rsquo;s retirement palace covering 30,000 square meters &mdash; and an entire medieval city grew up inside it. People still live within the ancient walls today. Walk in through the Golden Gate, find the Cathedral, wander the underground chambers.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Peristyle:</span> <span class="activity-desc">The central courtyard of the palace &mdash; the Cathedral (converted from the emperor&rsquo;s mausoleum), a Jupiter temple, and a cafe all share the same ancient Roman space. Order a coffee and sit among 1,700 years of history.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Cathedral of Saint Domnius:</span> <span class="activity-desc">The world&rsquo;s oldest Catholic cathedral, built inside a Roman emperor&rsquo;s mausoleum. Climb the medieval bell tower for views over the palace rooftops and the Adriatic.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Riva promenade:</span> <span class="activity-desc">Split&rsquo;s seafront esplanade &mdash; lined with palm trees and outdoor bars, with the palace wall on one side and the harbor on the other. The evening passeggiata happens here every night.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">First Dalmatian meal:</span> <span class="activity-desc">Order grilled fish (riba na zaru) with Swiss chard (blitva) and potatoes. Simple, fresh, the best version of simple food.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Grilled Adriatic fish</strong> &mdash; branzino, orada, zubatac. Order by the kilo at a konoba. Ask what was caught that morning.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Prsut</strong> &mdash; Dalmatian dry-cured ham, smokier than prosciutto. Every meal starts with prsut and paski sir (Pag island cheese).</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Salata od hobotnice</strong> &mdash; octopus salad with olive oil, garlic, and parsley. The definitive Croatian appetizer.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Bijelo vino</strong> &mdash; Posip and Grk white wines from Korcula island. Order a carafe of house white anywhere.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">2</span><span class="day-date-label">Jun 21</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Split Full Day + Hvar Island</div><div class="day-city">Split / Hvar, Croatia</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip transport-strip-green"><span class="transport-icon">&#9973;</span><span><strong>Split Ferry Terminal &rarr; Hvar Town</strong> &mdash; Catamaran, ~1 hr, &euro;7&ndash;12 each way. Last boat back ~9pm.</span></div>
+      <div class="section-block"><div class="section-label sl-r2">Morning in Split</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Marjan Hill:</span> <span class="activity-desc">Pine-covered peninsula above Split. Walk or hike to the hilltop viewpoints (30&ndash;45 min up) for panoramic views of the city, the palace below, and the islands. Small chapels cut into the cliff face.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Bacvice Beach:</span> <span class="activity-desc">Split&rsquo;s city beach 10 minutes from the palace. Famous for picigin &mdash; a shallow-water ball game invented here. Good swimming.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon &mdash; Hvar Island</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Hvar Fortress (Fortica):</span> <span class="activity-desc">20-minute walk uphill from the harbor. Clifftop fortress with extraordinary views over the harbor, the old town, and the Pakleni Islands scattered in the sea below.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Pakleni Islands:</span> <span class="activity-desc">Water taxi from the harbor (&euro;5 each way) to small car-free islands with secluded swimming coves and beach bars. Palmizana for developed; Stipanska for quieter swimming.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Hvar nightlife:</span> <span class="activity-desc">Carpe Diem beach club is one of Croatia&rsquo;s most famous. Optional overnight on Hvar if the vibe calls for it. Or return to Split on the last catamaran.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Gregada</strong> &mdash; Hvar&rsquo;s traditional fish stew with potatoes, olive oil, onion, and white wine. The definitive Hvar dish.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Hvar lavender honey</strong> &mdash; the island&rsquo;s hillsides are covered in lavender. Buy a jar at the harbor market.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Skampi na buzaru</strong> &mdash; prawns in white wine and garlic sauce. Order at a Hvar seafood restaurant over the water.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">3</span><span class="day-date-label">Jun 22</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Split &rarr; Dubrovnik by Ferry</div><div class="day-city">Dubrovnik, Croatia</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip transport-strip-green"><span class="transport-icon">&#9973;</span><span><strong>Split Ferry Terminal &rarr; Dubrovnik</strong> &mdash; Jadrolinija ferry, ~4.5 hrs, &euro;20&ndash;35. Sit on the upper deck &mdash; the coast is the journey. Or Krilo catamaran (~3 hrs via Hvar and Korcula, ~&euro;30).</span></div>
+      <div class="section-block"><div class="section-label sl-r2">Morning &mdash; Coastal Ferry</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">The ferry itself is an experience:</span> <span class="activity-desc">The Adriatic coast from Split to Dubrovnik passes dozens of forested islands, old Venetian towns, and cliff-lined coves. Sit on the upper deck with sunscreen. One of the great scenic journeys in Europe.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Korcula Island (catamaran stop):</span> <span class="activity-desc">If taking the Krilo catamaran, it stops at Korcula &mdash; a small fortified city said to be the birthplace of Marco Polo. The old town is stunning from the water.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon in Dubrovnik</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">City Walls:</span> <span class="activity-desc">Walk the 2km circuit of medieval walls immediately &mdash; before heat and crowds. The walls are 25 meters high in places, with the Adriatic on one side and red-roofed old city on the other. &euro;35 entry &mdash; expensive but non-negotiable.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Stradun:</span> <span class="activity-desc">The marble-paved main street of the Old Town. Polished by centuries of footsteps &mdash; it literally glows in the sunlight. One of the most beautiful streets in Europe.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Fort Lovrijenac:</span> <span class="activity-desc">Stands on a cliff outside the city walls &mdash; this is the Red Keep from Game of Thrones. Extraordinary views back over the city.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Buza Bar:</span> <span class="activity-desc">A bar cut into the city walls, directly overhanging the Adriatic. Concrete platforms, rope ladders into the sea, cold drinks. The most uniquely located bar in Europe. Follow the &ldquo;Cold Drinks&rdquo; signs along the walls.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Black risotto (crni rizot)</strong> &mdash; risotto made with cuttlefish ink. The defining Croatian coastal dish. Rich, savory, turns your mouth black.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Dingac wine</strong> &mdash; Croatia&rsquo;s most prestigious red wine, from the Peljesac peninsula. Full-bodied, intense.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Rozata</strong> &mdash; Dubrovnik&rsquo;s version of cr&egrave;me caramel, flavored with rožata liqueur and rose water. The local dessert tradition.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">4</span><span class="day-date-label">Jun 23</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Dubrovnik Full Day</div><div class="day-city">Dubrovnik, Croatia</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r2">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Old Town at 7am:</span> <span class="activity-desc">Walk the Stradun before the cruise ships dock (they arrive by 9am). The early morning light on the walls and streets is extraordinary, and you have it to yourself.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Franciscan Monastery:</span> <span class="activity-desc">One of the world&rsquo;s oldest continuously operating pharmacies (since 1317) is inside. The cloister is beautiful. &euro;5.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Cable Car to Mount Srd:</span> <span class="activity-desc">Rises to 412m above the old city. The best panoramic view of Dubrovnik&rsquo;s walls, harbor, and the islands. &euro;20 return.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Lokrum Island:</span> <span class="activity-desc">15-minute ferry from the Old Town port (&euro;5 return). Car-free island with a botanical garden, peacocks wandering freely, a Benedictine monastery, rocky swimming coves, and a saltwater lake.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Game of Thrones tour:</span> <span class="activity-desc">Dubrovnik was King&rsquo;s Landing. Fort Lovrijenac (Red Keep), Rector&rsquo;s Palace (Small Council chambers), Pile Gate steps (Sept of Baelor). Maps at tourist offices &mdash; walk it independently.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Banje Beach:</span> <span class="activity-desc">Best beach in Dubrovnik, just outside the Pile Gate. Afternoon swim with the city walls as backdrop.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Sunset from the walls:</span> <span class="activity-desc">Walk the city walls at golden hour. The Adriatic light at sunset on Dubrovnik&rsquo;s rooftops is one of the most photographed moments in Europe.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Seafood platter (misto plate)</strong> &mdash; fish, squid, mussels, prawns, all grilled over charcoal. Order for two.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Posip white wine from Korcula</strong> &mdash; Croatia&rsquo;s finest white wine. Crisp, mineral. Order a half-liter carafe.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Stonska torta</strong> &mdash; a sweet cake with rice, almonds, and raisins from the nearby town of Ston.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">5</span><span class="day-date-label">Jun 24</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Dubrovnik &rarr; Athens</div><div class="day-city">Athens, Greece</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="transport-strip transport-strip-green"><span class="transport-icon">&#9992;</span><span><strong>Dubrovnik DBV &rarr; Athens ATH</strong> &mdash; Aegean Airlines or Croatia Airlines, ~1.5 hrs, ~&euro;50&ndash;90. Multiple daily flights.</span></div>
+      <div class="section-block"><div class="section-label sl-r2">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Final Dubrovnik morning:</span> <span class="activity-desc">Walk the old town one last time before 9am. Buy sea salt from Ston, Dingac wine, or Croatian olive oil at the Gunduliceva Poljana morning market.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon in Athens</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Arrive Athens:</span> <span class="activity-desc">Metro from Athens airport (Line 3, blue line) to Monastiraki or Syntagma square &mdash; ~45 min, &euro;10.50. Buy a 3-day transit pass.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Monastiraki neighborhood:</span> <span class="activity-desc">The old bazaar district at the foot of the Acropolis. Flea market, street food, cafes with Acropolis views, energy everywhere.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Acropolis first view from Philopappou Hill:</span> <span class="activity-desc">Don&rsquo;t go up to the Acropolis today. Instead walk to Philopappou Hill (free, 15 min from Monastiraki) at dusk. The Parthenon lit up on its rock as the sun sets is the best first glimpse.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Anafiotika:</span> <span class="activity-desc">A tiny neighborhood built into the Acropolis rock by Cycladic islanders &mdash; whitewashed walls, bougainvillea, cats. Feels like you&rsquo;ve teleported to a Greek island in the middle of a capital city.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">First Greek meal:</span> <span class="activity-desc">Order a spread of mezedes &mdash; tzatziki, taramasalata (fish roe dip), saganaki (fried cheese), grilled octopus, dolmades, and a carafe of house wine. This is the correct first Athens meal.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Souvlaki</strong> &mdash; skewered pork or chicken in pita with tzatziki, tomato, onion. Monastiraki Square has the best spots. &euro;2.50&ndash;3.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Spanakopita</strong> &mdash; spinach and feta in phyllo pastry. Every bakery sells it fresh in the morning. &euro;1.50.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Ouzo</strong> &mdash; anise-flavored spirit that turns cloudy when water is added. Drink with ice and mezedes. Ouzo and seafood is the correct pairing.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 6 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">6</span><span class="day-date-label">Jun 25</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Athens &mdash; Acropolis + Ancient City</div><div class="day-city">Athens, Greece</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r2">Morning &mdash; Go Early</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Acropolis at 8am opening:</span> <span class="activity-desc">Arrive at the main Dionysiou Areopagitou entrance at 8am exactly. You have ~90 minutes before heat and crowds make it significantly less enjoyable. The Parthenon, Erechtheion (porch of the Caryatids), Propylaea, and Temple of Athena Nike. &euro;20 entry.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Acropolis Museum:</span> <span class="activity-desc">Directly below the Acropolis. The Parthenon Gallery reconstructs the full frieze. Original sculptures the British Museum won&rsquo;t return are displayed here, with plaster copies where the originals are. &euro;10.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">National Archaeological Museum:</span> <span class="activity-desc">The most important collection of ancient Greek art in the world. The Antikythera Mechanism (world&rsquo;s oldest known analog computer, 2,000 years old), the Mask of Agamemnon, the Bronze Poseidon/Zeus. Allow 2&ndash;3 hours.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Syntagma Square:</span> <span class="activity-desc">Changing of the Evzone guard at the Tomb of the Unknown Soldier. The Evzones wear distinctive pleated kilts and pom-pom shoes. Ceremony every hour.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Plaka neighborhood:</span> <span class="activity-desc">Athens&rsquo; most picturesque district &mdash; Orthodox churches, small museums, and the best gyros stands in the city.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Rooftop bars:</span> <span class="activity-desc">Athens has extraordinary rooftop bars with direct Acropolis views. A for Athens, Couleur Locale, and Hotel Grande Bretagne&rsquo;s rooftop all have the view. Order a Greek wine and watch the Acropolis glow at night.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Dinner in Psiri or Monastiraki:</span> <span class="activity-desc">Tzitzikas kai Mermingas for modern Greek, or Diporto Agoras (hidden basement taverna with no menu &mdash; they bring you what&rsquo;s cooked that day).</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Lamb kleftiko</strong> &mdash; lamb slow-cooked in parchment with herbs and lemon. Named after Greek mountain bandits who cooked stolen lamb in underground ovens.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Moussaka</strong> &mdash; layers of eggplant, minced meat, and bechamel. The definitive Greek comfort food.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Baklava</strong> &mdash; layers of phyllo, honey, and chopped nuts. Athens has serious baklava shops worth finding.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Freddo espresso</strong> &mdash; Greece invented cold coffee. Espresso shaken with ice. You will drink 2 per day in June heat.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 7 -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">7</span><span class="day-date-label">Jun 26</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Athens &mdash; Day Trip or Greek Islands</div><div class="day-city">Athens / Cape Sounion / Aegina</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r2">Option A &mdash; Cape Sounion</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Temple of Poseidon:</span> <span class="activity-desc">Bus from Athens (~90 min each way, &euro;7 return). A clifftop Ancient Greek temple at the southernmost tip of Attica, 70m above the Aegean. Lord Byron carved his name in a column in 1810. Sunset here is one of the great views in Greece. &euro;10 entry.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Option B &mdash; Aegina Island</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Aegina:</span> <span class="activity-desc">1-hour hydrofoil from Piraeus (Metro accessible). Small island famous for pistachios. Temple of Aphaia &mdash; well-preserved 5th-century BC temple. Swim at the beaches, eat fresh fish, return by evening.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Option C &mdash; Athens Neighborhoods</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Exarcheia:</span> <span class="activity-desc">Athens&rsquo; radical/arts neighborhood. Street art on every surface, record shops, cheap food, unconventional bars. A side of Athens most tourists never see.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Kerameikos:</span> <span class="activity-desc">Ancient cemetery at the edge of the Agora. Far less visited than the Acropolis but atmospheric &mdash; grave monuments, sacred road, the ancient city gate.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Pistachios from Aegina</strong> &mdash; buy directly from a farm stall. Genuinely different from imported pistachios.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Horta</strong> &mdash; wild greens (dandelion, chicory) boiled and dressed with olive oil and lemon. Every taverna has them.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Strapatsada</strong> &mdash; eggs cooked in tomato sauce with feta. A perfect lunch at a neighborhood cafe.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 8 — NEW FULL ATHENS DAY -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-r2"><span class="day-num-label">Day</span><span class="day-num">8</span><span class="day-date-label">Jun 27</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Athens &mdash; Final Full Day</div><div class="day-city">Athens, Greece</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r2">Morning</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Athens Central Market (Varvakios Agora):</span> <span class="activity-desc">The meat and fish halls of Athens&rsquo; central market &mdash; visceral, real, extraordinary. The surrounding streets have olive oil, spice, cheese, and wine shops. Buy provisions here.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Ancient Agora:</span> <span class="activity-desc">The marketplace and civic center of ancient Athens &mdash; where Socrates taught and democracy was debated. The Temple of Hephaestus is the best-preserved ancient Greek temple in the world (better than the Parthenon). Beautiful site with fewer crowds. &euro;10.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Hadrian&rsquo;s Library and Arch:</span> <span class="activity-desc">Roman emperor Hadrian&rsquo;s gifts to Athens &mdash; a monumental arch marking the boundary between the Greek old city and his Roman new city. Free to view from outside.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Afternoon</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Stavros Niarchos Cultural Center:</span> <span class="activity-desc">Designed by Renzo Piano on the coast south of Athens (metro accessible). The rooftop gives unexpected views of the Saronic Gulf. The park, library, and opera house are all worth exploring.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Sunset from Lycabettus Hill:</span> <span class="activity-desc">The highest point in Athens (277m). Take the funicular or walk up. 360-degree panoramic view over Athens to the sea. The Acropolis is visible in the middle of the city below. Arrive 30 minutes before sunset.</span></div></div>
+      </div>
+      <div class="section-block"><div class="section-label sl-r2">Evening &mdash; Last Night in Europe</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Gazi neighborhood:</span> <span class="activity-desc">Athens&rsquo; modern nightlife hub near the old gasworks. Bar-hop from Bios to Gazaki to Noel. Starts around 10pm and runs until 5am.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Final Greek feast:</span> <span class="activity-desc">Go somewhere special tonight &mdash; Spondi (two Michelin stars, Greek nouvelle cuisine) or Hytra (one star). Or Karamanlidika tou Fani &mdash; a deli-taverna serving charcuterie, cheese, and mezedes from Greek minority communities. Fascinating food and a great final meal.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Celebrate the trip:</span> <span class="activity-desc">You flew into Milan, traveled the Adriatic coast and ancient Greece, and tomorrow you fly home direct from here. That&rsquo;s a proper trip.</span></div></div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Local Cuisine</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Loukoumades</strong> &mdash; Loukoumades on Aiolou Street, said to be the oldest shop in Athens (200+ years old). Hot fried dough with thyme honey and walnuts.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Spoon sweets (glyko tou koutaliou)</strong> &mdash; preserved whole fruits in heavy syrup, served on a spoon as a welcome gesture at traditional cafes.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Mastiha liqueur from Chios</strong> &mdash; a clean, pine-resin liqueur unlike anything else. Order as a digestif on your last night.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Mythos or Fix beer</strong> &mdash; Greece&rsquo;s main lagers. Cold and light for the heat.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 9 — Fly Home -->
+  <div class="day-card" onclick="toggleDay(this)">
+    <div class="day-header">
+      <div class="day-pill dp-flight"><span class="day-num-label">Day</span><span class="day-num">9</span><span class="day-date-label">Jun 28</span></div>
+      <div class="day-title-wrap"><div><div class="day-title">Athens &mdash; Final Day | Delta Nonstop Home Jun 29</div><div class="day-city">Athens ATH &rarr; Atlanta ATL</div></div><span class="expand-icon">&#8964;</span></div>
+    </div>
+    <div class="day-body">
+      <div class="section-block"><div class="section-label sl-r2">Final Morning in Athens</div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Last Greek breakfast:</span> <span class="activity-desc">Tiropita or spanakopita from the bakery below your hotel. Greek coffee (ellinikos kafes) standing at the counter. This is how Athens starts its day.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Monastiraki one last time:</span> <span class="activity-desc">Quick walk through the flea market area. Buy whatever you forgot &mdash; olive oil, herbs, spices, small icons, hand-painted ceramics from Plaka.</span></div></div>
+        <div class="activity-item"><div class="activity-dot ad-r2"></div><div><span class="activity-name">Souvenirs worth buying:</span> <span class="activity-desc">Greek mountain tea (tsai tou vounou), saffron from Kozani (world&rsquo;s best), mastiha products from Chios, olive oil soaps, ouzo from Lesbos.</span></div></div>
+      </div>
+      <div class="flight-callout">
+        <div class="fc-label">&#9992; Delta Nonstop &mdash; June 29 &mdash; ATH &rarr; ATL</div>
+        <div class="fc-text"><strong>Delta nonstop ATH &rarr; ATL:</strong> The only nonstop flight between Athens and Atlanta. Operated by Delta with an Airbus A330. ~12 hours. Book as early as possible &mdash; the nonstop is popular and prices rise fast for late June.<br><br><strong>Getting to the airport:</strong> Athens Airport Metro Line 3 from Monastiraki or Syntagma: ~45 min, &euro;10.50. First metro runs ~5:30am. Arrive at the terminal at least 2.5 hours before departure.<br><br><strong>Time zones work in your favor:</strong> A morning departure from Athens arrives in Atlanta midday&ndash;afternoon local time. You haven&rsquo;t lost a day.</div>
+      </div>
+      <div class="food-box"><div class="food-label">&#127869; Final Bites</div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>Airport breakfast:</strong> Everest chain for a bougatsa (custard-filled pastry) or tiropita. Or bring food from the city.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>On the flight:</strong> Delta&rsquo;s ATH&rarr;ATL route has Greek-influenced meal options. Worth saving room for.</div></div>
+        <div class="food-item"><div class="food-bullet">&rsaquo;</div><div class="food-text"><strong>When you land in Atlanta:</strong> You&rsquo;ve eaten your way through Croatia and Greece. Time for a cheeseburger.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /route2 -->
+
+<footer>
+  <strong>Europe 2026</strong> &mdash; June 20&ndash;29 &middot; Both routes leave Milan June 20 &middot; Fly home June 29<br>
+  <span style="margin-top:8px;display:block;">Option 1: Madrid MAD &rarr; ATL (Delta connection) &middot; Option 2: Athens ATH &rarr; ATL (Delta nonstop)</span>
+</footer>
+
+<script>
+  function showRoute(n) {
+    document.getElementById('route1').classList.toggle('visible', n === 1);
+    document.getElementById('route2').classList.toggle('visible', n === 2);
+    document.getElementById('btn-r1').className = 'nav-btn' + (n === 1 ? ' active-r1' : '');
+    document.getElementById('btn-r2').className = 'nav-btn' + (n === 2 ? ' active-r2' : '');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleDay(card) {
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
