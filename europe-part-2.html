@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iberia 2026 — Brother Trip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --lis:#006400; --lis-l:#00b300;
+  --sev:#c0392b; --sev-l:#e04030;
+  --mad:#8B4513; --mad-l:#c06020;
+  --gold:#d4a94a;
+  --dark:#0a0a0a; --darker:#050505;
+  --text:#e8e0d5; --muted:#8a847a;
+  --card:#111010; --card2:#181614;
+  --border:rgba(255,255,255,.07);
+  --r:13px;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--darker);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;max-width:480px;margin:0 auto}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#06060f 0%,#060f06 50%,#0f0606 100%);padding:58px 22px 42px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 15% 20%,rgba(0,100,0,.22) 0%,transparent 55%),radial-gradient(ellipse 45% 40% at 85% 70%,rgba(139,69,19,.20) 0%,transparent 55%),radial-gradient(ellipse 40% 30% at 50% 95%,rgba(192,57,43,.15) 0%,transparent 55%);pointer-events:none}
+.hero-eye{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;position:relative}
+.hero h1{font-family:var(--serif);font-size:44px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;margin-bottom:8px;position:relative}
+.hero h1 em{font-style:italic;font-weight:300;color:var(--gold);display:block;font-size:36px}
+.hero-sub{font-size:13px;color:var(--muted);margin-bottom:22px;position:relative}
+.city-strip{display:flex;border-radius:20px;overflow:hidden;width:180px;margin:0 auto;height:6px}
+.city-strip-seg{flex:1}
+
+/* NAV */
+.nav-wrap{position:sticky;top:0;z-index:100;background:rgba(5,5,5,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-scroll{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 6px}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-tab{flex:0 0 auto;padding:12px 12px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;text-decoration:none;display:flex;align-items:center;transition:color .18s}
+.nav-tab:hover{color:#fff}
+.nav-tab[data-c="lis"]{--a:var(--lis-l)} .nav-tab[data-c="sev"]{--a:var(--sev-l)} .nav-tab[data-c="mad"]{--a:var(--mad-l)}
+.nav-tab[data-c="stay"]{--a:#a0c4ff} .nav-tab[data-c="book"]{--a:var(--gold)} .nav-tab[data-c="tix"]{--a:var(--gold)} .nav-tab[data-c="tips"]{--a:#bbb}
+.nav-tab.active{color:var(--a,#fff);border-bottom-color:var(--a,#fff)}
+
+/* CITY HEADER */
+.city-section{padding-bottom:8px}
+.city-hdr{padding:30px 20px 20px;position:relative;overflow:hidden}
+.city-hdr::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:1px;background:var(--border)}
+.city-lbl{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-bottom:5px}
+.city-name{font-family:var(--serif);font-size:36px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;margin-bottom:4px}
+.city-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.city-dates{font-size:12px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.07);border-radius:20px;padding:2px 9px;font-size:11px;color:var(--muted)}
+
+/* CITY ACCENTS */
+[data-s="lis"] .city-lbl{color:var(--lis-l)} [data-s="lis"] .city-hdr{background:linear-gradient(140deg,rgba(0,100,0,.17) 0%,transparent 60%)} [data-s="lis"] .day-num{color:var(--lis-l)!important} [data-s="lis"] .act-icon{background:rgba(0,100,0,.22)}
+[data-s="sev"] .city-lbl{color:var(--sev-l)} [data-s="sev"] .city-hdr{background:linear-gradient(140deg,rgba(192,57,43,.17) 0%,transparent 60%)} [data-s="sev"] .day-num{color:var(--sev-l)!important} [data-s="sev"] .act-icon{background:rgba(192,57,43,.22)}
+[data-s="mad"] .city-lbl{color:var(--mad-l)} [data-s="mad"] .city-hdr{background:linear-gradient(140deg,rgba(139,69,19,.17) 0%,transparent 60%)} [data-s="mad"] .day-num{color:var(--mad-l)!important} [data-s="mad"] .act-icon{background:rgba(139,69,19,.22)}
+
+/* DAY CARDS */
+.days-list{padding:10px 13px;display:flex;flex-direction:column;gap:8px}
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.day-hdr{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;user-select:none;transition:background .15s}
+.day-hdr:hover{background:rgba(255,255,255,.03)}
+.day-num{font-family:var(--serif);font-size:20px;font-weight:600;flex:0 0 28px;text-align:center;opacity:.6}
+.day-info{flex:1;min-width:0}
+.day-date{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.day-title{font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{font-size:20px;color:var(--muted);transition:transform .22s ease;flex:0 0 auto;line-height:1}
+.day-card.open .chev{transform:rotate(90deg)}
+.day-body{display:none;border-top:1px solid var(--border);padding:14px 15px 16px}
+.day-card.open .day-body{display:block}
+
+/* ACTIVITIES */
+.act-list{display:flex;flex-direction:column;gap:14px}
+.act{display:flex;gap:11px;align-items:flex-start}
+.act-icon{flex:0 0 32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-top:1px}
+.act-content{flex:1;min-width:0}
+.act-name{font-size:13px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:2px}
+.act-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px}
+.act-links{display:flex;flex-wrap:wrap;gap:6px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:7px;font-size:11px;font-weight:700;letter-spacing:.04em;text-decoration:none;border:none;cursor:pointer;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn:active{transform:scale(0.96)} .btn:hover{opacity:.82}
+.btn-book{background:var(--gold);color:#000}
+.btn-tix{background:rgba(255,255,255,.11);color:var(--text)}
+.btn-site{background:rgba(255,255,255,.07);color:var(--muted);border:1px solid var(--border)}
+.btn-hostel{background:rgba(160,196,255,.15);color:#a0c4ff;border:1px solid rgba(160,196,255,.25)}
+
+/* HOSTEL CARD */
+.hostel-banner{background:rgba(160,196,255,.07);border:1px solid rgba(160,196,255,.2);border-radius:var(--r);padding:14px 15px;margin-bottom:10px}
+.hostel-banner-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.hostel-icon{font-size:22px;flex:0 0 auto}
+.hostel-name{font-family:var(--serif);font-size:17px;font-weight:700;color:#fff;line-height:1.2}
+.hostel-city{font-size:11px;color:var(--muted);margin-top:1px}
+.hostel-dates{display:inline-flex;align-items:center;gap:5px;background:rgba(160,196,255,.12);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#a0c4ff;margin-bottom:8px;width:fit-content}
+.hostel-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}
+
+/* XFER CARD */
+.xfer{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-top:8px}
+.xfer-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
+.xfer-route{font-family:var(--serif);font-size:20px;font-weight:600;color:#fff}
+.xfer-detail{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.45}
+.conf-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(212,169,74,.15);border:1px solid rgba(212,169,74,.35);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.07em;margin-top:6px;width:fit-content}
+
+/* SECTION */
+.sec-block{padding:26px 20px 18px}
+.sec-title{font-family:var(--serif);font-size:24px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:3px}
+.sec-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+
+/* STAYS SECTION */
+.stay-grid{display:flex;flex-direction:column;gap:12px}
+.stay-card{background:var(--card2);border:1px solid rgba(160,196,255,.18);border-radius:var(--r);padding:16px}
+.stay-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.stay-dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;margin-top:4px}
+.stay-info{flex:1}
+.stay-hostel{font-family:var(--serif);font-size:18px;font-weight:700;color:#fff;line-height:1.2}
+.stay-city{font-size:11px;color:var(--muted);margin-top:1px}
+.stay-dates-badge{display:inline-flex;align-items:center;background:rgba(160,196,255,.1);border:1px solid rgba(160,196,255,.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;color:#a0c4ff;margin-top:8px;width:fit-content}
+.stay-addr{font-size:12px;color:var(--muted);margin:8px 0 10px;line-height:1.5}
+
+/* BOOKING ROWS */
+.bk-group{margin-bottom:20px}
+.bk-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.bk-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.bk-name{font-size:13px;font-weight:500;flex:1;min-width:0;line-height:1.3}
+.bk-price{font-size:12px;color:var(--muted);white-space:nowrap;margin-right:6px}
+
+/* TRANSPORT FEATURE */
+.transport-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:18px}
+.transport-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.transport-icon{font-size:26px;flex:0 0 auto}
+.transport-title{font-family:var(--serif);font-size:17px;font-weight:700;color:#fff;line-height:1.2}
+.transport-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.transport-desc{font-size:12px;color:var(--text);line-height:1.55;margin-bottom:12px}
+.transport-facts{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.t-fact{display:flex;gap:8px;align-items:baseline}
+.t-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:0 0 72px}
+.t-val{font-size:12px;color:var(--text)}
+
+/* TIPS */
+.tips-city{margin-bottom:24px}
+.tips-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.tips-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.tips-name{font-family:var(--serif);font-size:20px;font-weight:700;color:#fff}
+.tip-list{display:flex;flex-direction:column;gap:6px}
+.tip-row{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:9px}
+.tip-row.alert{border-color:rgba(192,57,43,.3);background:rgba(192,57,43,.07)}
+.tip-icon{flex:0 0 18px;font-size:14px;line-height:1.55}
+.tip-text{font-size:12.5px;line-height:1.5}
+.tip-text strong{color:#fff}
+
+/* DIVIDER / FOOTER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);margin:6px 20px}
+footer{padding:28px 20px 48px;text-align:center;border-top:1px solid var(--border)}
+.footer-title{font-family:var(--serif);font-size:18px;font-style:italic;font-weight:400;color:var(--gold);margin-bottom:6px}
+.footer-sub{font-size:12px;color:var(--muted);line-height:1.7}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="hero-eye">✈ Alexander + Miller · Jun 20-29</p>
+  <a href="index.html" class="button">Back -></a>
+  <h1>Iberia<br><em>Summer 2026</em></h1>
+  <p class="hero-sub">Lisbon · Seville · Madrid → ATL</p>
+  <div class="city-strip">
+    <div class="city-strip-seg" style="background:var(--lis)"></div>
+    <div class="city-strip-seg" style="background:var(--sev)"></div>
+    <div class="city-strip-seg" style="background:var(--mad)"></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-wrap">
+  <div class="nav-scroll">
+    <a class="nav-tab active" data-c="lis" href="#lis">🟢 LIS</a>
+    <a class="nav-tab" data-c="sev" href="#sev">🔴 SEV</a>
+    <a class="nav-tab" data-c="mad" href="#mad">🟤 MAD</a>
+    <a class="nav-tab" data-c="stay" href="#stays">🏠 Stays</a>
+    <a class="nav-tab" data-c="book" href="#bookings">📋 Book</a>
+    <a class="nav-tab" data-c="tix"  href="#tickets">🎟 Tickets</a>
+    <a class="nav-tab" data-c="tips" href="#tips">💡 Tips</a>
+  </div>
+</nav>
+
+<!-- ══════════ LISBON ══════════ -->
+<section id="lis" class="city-section" data-s="lis">
+  <div class="city-hdr">
+    <div class="city-lbl">Lisbon · Portugal</div>
+    <div class="city-name">Lisboa</div>
+    <div class="city-meta">
+      <span class="city-dates">Jun 20–23, 2026</span>
+      <span class="pill">🌙 3 nights</span>
+    </div>
+  </div>
+  <div class="days-list">
+
+    <!-- Jun 20 -->
+    <div class="day-card open">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">20</div>
+        <div class="day-info"><div class="day-date">Sat · Jun 20</div><div class="day-title">Arrive MXP → LIS  (TAP Airline)</div></div>
+        <div class="chev">></div>
+      </div>
+      <div class="day-body">
+        <!-- HOSTEL -->
+        <div class="hostel-banner">
+          <div class="hostel-banner-top">
+            <div class="hostel-icon">🏠</div>
+            <div><div class="hostel-name">We Hate F Tourists</div><div class="hostel-city">Lisbon</div></div>
+          </div>
+          <div class="hostel-dates">📅 Jun 20 – 23</div>
+          <div class="hostel-desc">Your Lisbon base for 3 nights. Check in on arrival from Milan.</div>
+          <div class="act-links">
+            <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873419" target="_blank">📋 View Booking</a>
+          </div>
+        </div>
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">✈️</div>
+            <div class="act-content">
+              <div class="act-name">Fly Milan Malpensa (MXP) → Lisbon (LIS)</div>
+              <div class="act desc">Depart 5:55PM + Arrive 7:50PM on TAP Airline</div>
+              <div class="act-desc">Arrive, check in, freshen up before dinner.</div>
+              <div class="xfer">
+                <div class="xfer-lbl">✈ Flight Confirmation</div>
+                <div class="xfer-route">MXP → LIS</div>
+                <div class="conf-badge">🔑 ZHGHJV</div>
+                <a class="btn btn-hostel" href="https://www.flytap.com/en-us?anetwork=PAIDSEARCH&gad_campaignid=10703800224&gad_source=1&gbraid=0AAAAACftNYknUADLOll169dVozkVX0Wn0&gclid=Cj0KCQjw54nRBhDCARIsAMcY_SA7m9P-DhIzJLjKEPc9avOvT6Hp2Q644Kn9blmsZnkOXmjca8RRgPYaAqJmEALw_wcB&gclsrc=aw.ds#special-anchor-my-travels" target="_blank">TAP Airline Login</a>
+                <div>
+                <a class="btn btn-hostel" href="https://www.google.com/maps/dir/Humberto+Delgado+Airport,+Alameda+das+Comunidades+Portuguesas,+1700-111+Lisboa,+Portugal/R.+Cap.+Renato+Baptista+88,+1150-043+Lisboa,+Portugal/@38.7495414,-9.1738247,13z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0xd19324616d90183:0xa66a53e58036d46!2m2!1d-9.1319758!2d38.7788454!1m5!1m1!1s0xd19338508802967:0x2985604015d6c65c!2m2!1d-9.1365769!2d38.722234!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map Train Airport to Hostel</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🎵</div>
+            <div class="act-content">
+              <div class="act-name">Dinner — Food in Lisbon</div>
+              <div class="act-desc"></div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://www.getyourguide.com/explorer/lisbon-ttd42/food-in-lisbon/?campaign_id=23381352371&adgroup_id=&target_id=&loc_physical_ms=9011038&match_type=&ad_id=&keyword=&ad_position=&feed_item_id=&placement=&device=c&assetgroup_id=6657400053&synthetic_keyword=lisbon%20restaurants&partner_id=CD951&gad_source=1&gad_campaignid=23826817333&gbraid=0AAAAADmzJCNKX8n1GjtC4dVNun8PNMsp_&gclid=Cj0KCQjw54nRBhDCARIsAMcY_SCDGpTe1aXGpONKBe7FwL66kfxN_VCumG7aZuL2bLabWr-5OMV2DfgaAkKXEALw_wcB" target="_blank">⚡ Food Recommendation</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 21 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">21</div>
+        <div class="day-info"><div class="day-date">Sun · Jun 21</div><div class="day-title">Jerónimos · Torre de Belém · Time Out</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">⛪</div>
+            <div class="act-content">
+              <div class="act-name">Jerónimos Monastery</div>
+              <div class="act-desc">Portugal's greatest architectural treasure — a UNESCO World Heritage Site built in 1496. The two-story Manueline cloister is extraordinary: every arch carved with ropes, coral, and maritime symbols. Vasco da Gama is buried here. Book timed entry online in advance — sells out in peak season. Cloister entry €10; church is free. Open Tue–Sun 9:30am–5:30pm.</div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://www.jeronimosmonasterytickets.com/?ci=1&cm=23354272256__c_x____Cj0KCQjw54nRBhDCARIsAMcY_SD8dcp-J3yyD_mWkQ8UiCwi25Da0Rbni2ZrDiBXNFTYlUgtRWC17wIaAtRmEALw_wcB&gad_source=1&gad_campaignid=23475707163&gbraid=0AAAAACRC4b3v6JSor1ucsI7CDgsHXhz6W&gclid=Cj0KCQjw54nRBhDCARIsAMcY_SD8dcp-J3yyD_mWkQ8UiCwi25Da0Rbni2ZrDiBXNFTYlUgtRWC17wIaAtRmEALw_wcB" target="_blank">⚡ Official Tickets</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🗼</div>
+            <div class="act-content">
+              <div class="act-name">Torre de Belém</div>
+              <div class="act-desc">A 16th-century tower rising from the Tagus River, built to defend Lisbon's harbor. Its ornate Manueline exterior — sea monsters, knots, armillary spheres — is one of Portugal's iconic images. Short walk along the riverfront from Jerónimos. Entry ~€6.</div>
+              <div class="act-links">
+                <a class="btn btn-tix" href="https://www.google.com/maps/place/Bel%C3%A9m+Tower+Garden/@38.6928695,-9.2184665,17z/data=!3m1!4b1!4m6!3m5!1s0xd1ecb696d84376d:0x5d831dda7479607d!8m2!3d38.6928695!4d-9.2158916!16s%2Fg%2F121j212g?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">🎟 Map to Torre de Belém</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🍽</div>
+            <div class="act-content">
+              <div class="act-name">Time Out Market</div>
+              <div class="act-desc">Lisbon's legendary food hall in an 1892 iron market building. Dozens of the city's best chefs serve side by side — pastéis de nata, grilled fish, bifanas, wine. No booking needed; grab a tray and try everything.</div>
+              <div class="act-links">
+                <a class="btn btn-site" href="https://www.timeoutmarket.com/lisboa/en/" target="_blank">🌐 Website</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 22 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">22</div>
+        <div class="day-info"><div class="day-date">Mon · Jun 22</div><div class="day-title">Sintra Day Trip</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🚂</div>
+            <div class="act-content">
+              <div class="act-name">CP Train from Rossio Station</div>
+              <div class="act-desc">Depart from Rossio in central Lisbon — trains every 20–30 min, ~40 min journey, €2.30 RT. Use your Viva Viagem card. Leave before 9am — Sintra is packed by 10:30am in summer.</div>
+              <a class="btn btn-book" href="https://www.google.com/maps/dir/Rossio,+1100-373+Lisboa,+Portugal/Sintra,+Portugal/@38.7583262,-9.3419157,12z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0xd1933875c6762ed:0x483ad88c98affaf!2m2!1d-9.1384125!2d38.7138415!1m5!1m1!1s0xd1edac1a7510ee9:0x13585cc0b00f573c!2m2!1d-9.3816589!2d38.8028687!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank"> Map Train Route</a>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🏰</div>
+            <div class="act-content">
+              <div class="act-name">Pena Palace</div>
+              <div class="act-desc">A wildly colorful Romanticist palace perched on a misty hilltop — candy-striped towers, medieval battlements, and Moorish arches crammed together. Built in the 1840s for King Ferdinand II. One of Europe's most surreal sights. Timed entry required; sells out days in advance in summer. Book now.</div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://www.getyourguide.com/sintra-l99/pena-palace-park-skip-the-line-entrance-ticket-t79596/" target="_blank">⚡ GetYourGuide</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🌿</div>
+            <div class="act-content">
+              <div class="act-name">Quinta da Regaleira</div>
+              <div class="act-desc">A neo-Gothic estate with mystical gardens hiding grottos, tunnels, and the famous Initiation Well — a 27-meter spiral staircase descending into the earth. Built by an eccentric millionaire obsessed with Freemasonry and Tarot. Less crowded than Pena and arguably more memorable.</div>
+              <div class="act-links">
+                <a class="btn btn-tix" href="https://www.getyourguide.com/sintra-l99/entry-tickets-tc123/" target="_blank">🎟 GetYourGuide</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 23 depart -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">23</div>
+        <div class="day-info"><div class="day-date">Tue · Jun 23</div><div class="day-title">→ Travel to Seville</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🚌</div>
+            <div class="act-content">
+              <div class="act-name">Depart Lisbon → Seville</div>
+              <div class="act-desc">fly ~1.5h Ryanair.  Arrive in time to check in and explore Santa Cruz before dinner.</div>
+              <div class="act-desc">Departure time - 13:40  Arrival time - 15:45</div>
+                <a class="btn btn-tix" href="https://www.ryanair.com/us/en/lp/login?returnTo=%2Fmyryanair%2Fhome" target="_blank">Ryanair Login</a>
+              <div class="xfer">
+                <div class="xfer-route">LIS → SVQ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ SEVILLE ══════════ -->
+<section id="sev" class="city-section" data-s="sev">
+  <div class="city-hdr">
+    <div class="city-lbl">Seville · Spain</div>
+    <div class="city-name">Sevilla</div>
+    <div class="city-meta">
+      <span class="city-dates">Jun 23–25, 2026</span>
+      <span class="pill">🌙 2 nights</span>
+    </div>
+  </div>
+  <div class="days-list">
+
+    <!-- Jun 23 arrive Seville -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">23</div>
+        <div class="day-info"><div class="day-date">Tue · Jun 23</div><div class="day-title">Arrive · Barrio Santa Cruz</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <!-- HOSTEL -->
+        <div class="hostel-banner">
+          <div class="hostel-banner-top">
+            <div class="hostel-icon">🏠</div>
+            <div><div class="hostel-name">Urban Cube Hostel Sevilla</div><div class="hostel-city">Seville</div></div>
+          </div>
+          <div class="hostel-dates">📅 Jun 23 – 25</div>
+          <div class="hostel-desc">Your Seville base for 2 nights.</div>
+          <div class="act-links">
+            <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873516" target="_blank">📋 View Booking</a>
+          </div>
+          <a class="btn btn-hostel" href="https://www.google.com/maps/dir/Seville+Airport,+A-4,+Km.+532,+41020+Sevilla,+Spain/C.+Amador+de+los+R%C3%ADos,+13,+41003+Sevilla,+Spain/@37.4004022,-5.980702,13z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0xd12661c8d849bb9:0x1527e77a0fb273a!2m2!1d-5.890794!2d37.4202698!1m5!1m1!1s0xd126ea7f8ee6629:0x3a193eb64706a8b4!2m2!1d-5.9829035!2d37.3912984!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map train route to Hostel</a>
+        </div>
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🏘</div>
+            <div class="act-content">
+              <div class="act-name">Barrio Santa Cruz — Evening Wander</div>
+              <div class="act-desc">Seville's medieval Jewish quarter: a labyrinth of whitewashed alleyways barely wide enough for two people, draped in bougainvillea and smelling of orange blossom. Get lost on purpose. Stop at any tapas bar — order jamón, salmorejo, cold Cruzcampo. The best way to arrive in Seville.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 24 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">24</div>
+        <div class="day-info"><div class="day-date">Wed · Jun 24</div><div class="day-title">Alcázar · Cathedral · Flamenco</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🏯</div>
+            <div class="act-content">
+              <div class="act-name">Real Alcázar</div>
+              <div class="act-desc">The oldest royal palace still in use in Europe — the Spanish royal family still stays here. A dizzying mix of Mudéjar tile-work, geometric ceilings, sunlit patios, and shaded gardens built across a thousand years. Book timed entry well ahead — June dates sell out weeks in advance. Strict 30-min entry window; don't be late. Entry €15.50, opens 9:30am.</div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://alcazarsevilla.org/" target="_blank">⚡ Official Site</a>
+                <a class="btn btn-tix" href="https://ticketrealalcazar.com/en/" target="_blank">🎟 Buy Tickets</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">⛪</div>
+            <div class="act-content">
+              <div class="act-name">Seville Cathedral + Giralda Tower</div>
+              <div class="act-desc">The largest Gothic cathedral in the world, built on a 12th-century mosque — its minaret (the Giralda) still stands. Climb via ramps (no stairs!) for unforgettable panoramic views of Seville. Christopher Columbus is buried inside. Entry €13 online. Book ahead; peak slots sell out. Opens 10:45am.</div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://catedraldesevilla.servitickets.es/" target="_blank">⚡ Official Tickets</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">💃</div>
+            <div class="act-content">
+              <div class="act-name">Flamenco — Evening Show</div>
+              <div class="act-desc">Seville is the birthplace of flamenco. Skip touristy dinner shows — find a smaller tablao or bar. The stomping, clapping, wailing guitar and raw emotion are unforgettable even for 30 minutes. Ask your hostel for a local recommendation, or book below.</div>
+              <div class="act-links">
+                <a class="btn btn-tix" href="https://www.google.com/maps/dir/C.+Amador+de+los+R%C3%ADos,+13,+41003+Sevilla,+Spain/C.+C%C3%A9spedes,+21,+a,+Casco+Antiguo,+41004+Sevilla,+Spain/@37.3910249,-5.9906876,17z/data=!4m14!4m13!1m5!1m1!1s0xd126ea7f8ee6629:0x3a193eb64706a8b4!2m2!1d-5.9829035!2d37.3912984!1m5!1m1!1s0xd126c1c4156a0db:0x9f4f3fb2be562dad!2m2!1d-5.9870934!2d37.3878017!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank"> La Carbonería (Cash Only Bar)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 25 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">25</div>
+        <div class="day-info"><div class="day-date">Thu · Jun 25</div><div class="day-title">Plaza de España → Train to Madrid</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🏛</div>
+            <div class="act-content">
+              <div class="act-name">Plaza de España — Morning Visit</div>
+              <div class="act-desc">A sweeping semi-circular plaza built for the 1929 Ibero-American Exposition — grand colonnade, ornate bridges, 48 ceramic tile alcoves representing each Spanish province. Rent a rowboat on the canal. One of the most beautiful public spaces in Europe. Free entry; best before 11am.</div>
+               <a class="btn btn-tix" href="https://www.google.com/maps/dir/C.+Amador+de+los+R%C3%ADos,+13,+41003+Sevilla,+Spain/Av.+Isabel+la+Cat%C3%B3lica,+41004+Sevilla,+Spain/@37.3825841,-5.9955153,15z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0xd126ea7f8ee6629:0x3a193eb64706a8b4!2m2!1d-5.9829035!2d37.3912984!1m5!1m1!1s0xd126c2143067a97:0x3de78a1f380fa842!2m2!1d-5.9875483!2d37.3762757!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map Route</a>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🚄</div>
+            <div class="act-content">
+              <div class="act-name">AVE High-Speed Train to Madrid</div>
+              <div class="act-desc">Spain's AVE is comfortable, fast, and punctual. Your confirmation is below — departs Seville Santa Justa, arrives Madrid Atocha.</div>
+              <div class="xfer">
+                <div class="xfer-lbl">🚄 Renfe AVE — Confirmed</div>
+                <div class="xfer-route">SVQ → MAD</div>
+                <div class="xfer-detail">Departs 14:57 · Arrives 18:03 Madrid Atocha · ~2h 06min</div>
+                <div class="conf-badge">🔑 YKWZNL</div>
+                <a class="btn btn-tix" href="https://www.google.com/maps/dir/C.+Amador+de+los+R%C3%ADos,+13,+41003+Sevilla,+Spain/Seville-Santa+Justa,+41007,+C.+Joaquin+Morales+y+Torres,+41003+Sevilla,+Spain/@37.3919961,-5.9814195,17z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd126ea7f8ee6629:0x3a193eb64706a8b4!2m2!1d-5.9829035!2d37.3912984!1m5!1m1!1s0xd126ea585ca9fc9:0x1f6ab089fe7a10b4!2m2!1d-5.9749377!2d37.3923848!3e2?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map Route to train station</a>
+                <a class="btn btn-tix" href="https://www.thetrainline.com/my-account/order-token#ECwIAmAqtA6pp9Ed3yNNP7QMTX8gOw6C4PneqHnPX50sgDMTzyJX5S2QWgWWpdfB" target="_blank">View Train Booking</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ MADRID ══════════ -->
+<section id="mad" class="city-section" data-s="mad">
+  <div class="city-hdr">
+    <div class="city-lbl">Madrid · Spain</div>
+    <div class="city-name">Madrid</div>
+    <div class="city-meta">
+      <span class="city-dates">Jun 25–29, 2026</span>
+      <span class="pill">🌙 4 nights</span>
+    </div>
+  </div>
+  <div class="days-list">
+
+    <!-- Jun 25 arrive Madrid -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">25</div>
+        <div class="day-info"><div class="day-date">Thu · Jun 25</div><div class="day-title">Arrive 18:03 · Retiro Park</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <!-- HOSTEL -->
+        <div class="hostel-banner">
+          <div class="hostel-banner-top">
+            <div class="hostel-icon">🏠</div>
+            <div><div class="hostel-name">Generator Madrid</div><div class="hostel-city">Madrid</div></div>
+          </div>
+          <div class="hostel-dates">📅 Jun 25 – 29</div>
+          <div class="hostel-desc">Your Madrid base for 4 nights. Generator is a design-forward hostel — social bar, great common areas.</div>
+          <div class="act-links">
+            <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873573" target="_blank">📋 View Booking</a>
+            <a class="btn btn-hostel" href="https://www.google.com/maps/dir/Atocha,+Arganzuela,+Madrid,+Spain/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/@40.4115785,-3.7083241,15z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42263d74685c5d:0x42e69362679ae93!2m2!1d-3.6881569!2d40.4023449!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map Route to Hostel</a>
+          </div>
+        </div>
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🚄</div>
+            <div class="act-content">
+              <div class="act-name">Arrive Madrid Atocha 18:03</div>
+              <div class="act-desc">Check in at Generator. Buy your Tarjeta Multi metro card at the Atocha station machines (see Tips).</div>
+            </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🌳</div>
+            <div class="act-content">
+              <div class="act-name">Retiro Park — Evening Walk</div>
+              <div class="act-desc">Madrid's beloved 350-acre royal park. Marvel at the Crystal Palace (a 19th-century glass greenhouse), or walk the rose garden. Perfect 7–9pm when the light is golden. Free entry.</div>
+              <a class="btn btn-hostel" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/28009+Madrid,+Spain/@40.4196001,-3.7034926,15z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd4228a169dbe985:0x1c0340f7338baec0!2m2!1d-3.680072!2d40.4161588!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Route to Park</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- Jun 26 Toledo -->
+<div class="day-card">
+  <div class="day-hdr" onclick="toggle(this)">
+    <div class="day-num">26</div>
+    <div class="day-info"><div class="day-date">Friday · Jun 26</div><div class="day-title">Toledo Day Trip</div></div>
+    <div class="chev">›</div>
+  </div>
+  <div class="day-body">
+    <div class="act-list">
+      <div class="act">
+        <div class="act-icon">🚄</div>
+        <div class="act-content">
+          <div class="act-name">Renfe to Toledo from Atocha</div>
+          <div class="act-desc">Just 33 minutes, ~€13 RT. Trains run from ~7am. Book ahead at renfe.com — weekend seats go fast.</div>
+          <div class="act-links">
+            <a class="btn btn-book" href="https://www.renfe.com/es/en" target="_blank">⚡ renfe.com</a>
+          </div>
+        </div>
+      </div>
+      <div class="act">
+        <div class="act-icon">🏙</div>
+        <div class="act-content">
+          <div class="act-name">Toledo — City of Three Cultures</div>
+          <div class="act-desc">A medieval city on a granite hill, once home to Christians, Muslims, and Jews living together. Cobblestone streets lead to the Gothic Cathedral, the Alcázar fortress, and the El Greco Museum. Get lost in the alleys — Toledo rewards the curious. Half-day is enough; full day is better.</div>
+          <a class="btn btn-book" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/Toledo,+Spain/@40.4083097,-3.7031946,14.72z/am=t/data=!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd6a0bad0bb5fdf1:0xc67f5be86a75adfe!2m2!1d-4.0293783!2d39.8681019!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">🗺 Map Route to Toledo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alternative Day Toggle Button -->
+    <div style="margin-top:16px;text-align:center;">
+      <button onclick="toggleAlt(this)" style="background:#1a1a2e;border:1px solid #444;color:#ccc;padding:8px 18px;border-radius:20px;cursor:pointer;font-size:13px;">
+        🔀 Show Alternative Day
+      </button>
+    </div>
+
+    <!-- Alternative Day Card -->
+    <div class="alt-day" style="display:none;margin-top:14px;border:1px solid #333;border-radius:10px;padding:14px;background:#111118;">
+      <div style="font-size:12px;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Alternative · Jun 26</div>
+      <div class="act-list">
+
+        <!-- ADD YOUR ALTERNATIVE ACTIVITIES HERE -->
+          <div class="act">
+      <div class="act-icon">👑</div>
+      <div class="act-content">
+        <div class="act-name">Royal Palace of Madrid</div>
+        <div class="act-desc">The largest palace in Western Europe — 3,478 rooms of jaw-dropping Italian Baroque excess built by Philip V in the 1700s. The official royal residence until 1931; today open to the public. Don't miss the Throne Room, the Hall of Mirrors, the porcelain room, and works by Velázquez, Goya, and Caravaggio. Entry €14 online. Free Mon–Thu 5–7pm in summer for non-EU visitors if you don't mind a queue. Allow 2–3 hours. Book skip-the-line to avoid a long wait on Saturdays.</div>
+        <div class="act-links">
+          <a class="btn btn-book" href="https://www.getyourguide.com/royal-palace-of-madrid-l3611/madrid-royal-palace-fast-access-admission-ticket-t393230/" target="_blank">⚡ GetYourGuide</a>
+          <a class="btn btn-site" href="https://www.patrimonionacional.es/en" target="_blank">🌐 Official Site</a>
+          <a class="btn btn-site" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/28071+Madrid,+Chamber%C3%AD,+Madrid,+Spain/@40.4254512,-3.7108732,15z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd422891b59a7d87:0x2f6bb821e738e3bb!2m2!1d-3.6916235!2d40.4265434!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map Route</a>
+        </div>
+      </div>
+    </div>
+        
+        <div class="act">
+      <div class="act-icon">🌅</div>
+      <div class="act-content">
+        <div class="act-name">Temple of Debod — Sunset</div>
+        <div class="act-desc">A genuine 2,200-year-old Egyptian temple gifted to Spain in 1968, reconstructed in a hilltop park just west of the palace. The view of the Madrid skyline at golden hour from here is one of the best in the city. Free entry to the grounds. Arrive 30–45 min before sunset for the best light and manageable crowds.</div>
+        <div class="act-links">
+          <a class="btn btn-site" href="https://www.esmadrid.com/en/tourist-information/templo-de-debod" target="_blank">🌐 Info</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="act">
+      <div class="act-icon">🍻</div>
+      <div class="act-content">
+        <div class="act-name">Malasaña Neighborhood — Evening</div>
+        <div class="act-desc">Madrid's coolest neighborhood: a former working-class barrio now packed with independent bars, vintage shops, record stores, and street art. Saturday nights here are electric. Wander Calle Fuencarral and Plaza del Dos de Mayo, grab craft beers at any terrace bar, and stay as late as you want — it only gets better after midnight.</div>
+      </div>
+    </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Jun 27 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">27</div>
+        <div class="day-info"><div class="day-date">Sat · Jun 27</div><div class="day-title">Prado Museum · Rooftop bar</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">🖼</div>
+            <div class="act-content">
+              <div class="act-name">Prado Museum</div>
+              <div class="act-desc">One of the greatest art museums on earth — Las Meninas (Velázquez), Saturn Devouring His Son (Goya), Garden of Earthly Delights (Bosch). 8,000+ works across 700 years. Go early or at lunch. Entry €15 online. ⚡ Free Mon–Sat 6–8pm & Sun 5–7pm — arrive 45+ min early to queue. Buy timed entry to skip the line.</div>
+              <div class="act-links">
+                <a class="btn btn-book" href="https://entradas.museodelprado.es/" target="_blank">⚡ Official Tickets</a>
+              </div>
+            </div>
+          </div>
+          <div class="act">
+          <div class="act-icon">🌆</div>
+            <div class="act-content">
+              <div class="act-name">Azotea del Círculo de Bellas Artes</div>
+              <div class="act-desc">The best rooftop bar in Madrid — 360° panoramic views from atop a 1920s Art Deco building on Alcalá street. Small entry fee (~€5). Get there around 9:30–10pm for golden hour drinks in June. Arrive early — fills up fast.</div>
+              <div class="act-desc">Resevation for 8:30PM on June 27</div>
+              <div class="act-links">
+                <a class="btn btn-site" href="https://www.circulodebellasartes.com/en/azotea/" target="_blank">🌐 Website</a>
+                <a class="btn btn-site" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/Azotea+del+C%C3%ADrculo,+Azotea+del+C%C3%ADrculo+de+Bellas+Artes+de+Madrid,+C.+del+Marqu%C3%A9s+de+Casa+Riera,+2,+Centro,+28004+Madrid,+Spain/@40.4191591,-3.7076506,16z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd42288474f8e6b3:0xfc1ba05eef9090a6!2m2!1d-3.6964847!2d40.4183253!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank">Map to Restaurants</a>
+              </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Jun 28 -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">28</div>
+        <div class="day-info"><div class="day-date">Sun · Jun 28</div><div class="day-title">Rastro Flea Market · Final Evening</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act">
+            <div class="act-icon">🛍</div>
+            <div class="act-content">
+              <div class="act-name">El Rastro Flea Market</div>
+              <div class="act-desc">Europe's largest open-air flea market through La Latina on Sunday mornings — vintage, antiques, records, oddities. Locals drink vermut in nearby bars from noon. Best before 12pm. ⚠️ Keep bag in front — pickpockets work the crowd. Free to browse.</div>
+              <a class="btn btn-site" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/Rastro+de+Madrid,+C%2F+de+la+Ribera+de+Curtidores,+Centro,+28005,+Centro,+28005+Madrid,+Spain/@40.4142309,-3.7209845,15z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd42270051e9a07f:0xe7c3e3a0e961ef29!2m2!1d-3.7072631!2d40.4069918!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank"> Map Route</a>
+            </div>
+          </div>
+          </div>
+          <div class="act">
+            <div class="act-icon">🥩</div>
+            <div class="act-content">
+              <div class="act-name">Final Dinner in Madrid</div>
+              <div class="act-desc">Dinner at 9:30–10pm is normal here. Try La Bola (open since 1870) for cocido madrileño stew, or tapas-hop through Calle Cava Baja in La Latina. End the night at a bodega or rooftop bar — Madrid keeps going until 3am.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Jun 29 Fly Home -->
+    <div class="day-card">
+      <div class="day-hdr" onclick="toggle(this)">
+        <div class="day-num">29</div>
+        <div class="day-info"><div class="day-date">Mon · Jun 29</div><div class="day-title">✈ Delta Nonstop → Atlanta ATL</div></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="day-body">
+        <div class="act-list">
+          <div class="act">
+            <div class="act-icon">✈️</div>
+            <div class="act-content">
+              <div class="act-name">Delta Nonstop — MAD → ATL</div>
+              <div class="act-desc">Delta is the only airline flying nonstop from Madrid to Atlanta. Flight DL109 on a Boeing 767, ~10h 15min. Check in online the night before. Take Metro Line 8 from central Madrid to the airport (~30 min, €5 + €3 airport surcharge). Be at the airport 3 hours before departure for international.</div>
+              <div class="xfer">
+                <div class="xfer-lbl">✈ Delta Nonstop</div>
+                <div class="xfer-route">MAD → ATL</div>
+                <div class="xfer-detail">Flight DL109 · Boeing 767 · ~10h 15min<br>Departs Terminal 1 (MAD) · Arrives Terminal I (ATL)<br>Check delta.com for exact departure time</div>
+              </div>
+              <div class="act-links" style="margin-top:10px">
+                <a class="btn btn-book" href="https://www.delta.com" target="_blank">✈ Check-in at delta.com</a>
+                <a class="btn btn-site" href="https://www.google.com/maps/dir/C.+de+San+Bernardo,+2,+Centro,+28013+Madrid,+Spain/Adolfo+Su%C3%A1rez+Madrid-Barajas+Airport,+Av+de+la+Hispanidad,+s%2Fn,+28042+Madrid,+Spain/@40.450859,-3.678634,13z/data=!3m2!4b1!5s0xd126eaf7e258e8f:0x89c3dfacbe0ab2d1!4m14!4m13!1m5!1m1!1s0xd42287b7dec2211:0xd112867207cccf17!2m2!1d-3.7081027!2d40.4208022!1m5!1m1!1s0xd4231d000000001:0x6e7725ea0f85ceef!2m2!1d-3.5642764!2d40.4895147!3e3?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank"> Map Route</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ STAYS ══════════ -->
+<section id="stays" class="sec-block">
+  <div class="sec-title">🏠 All Stays</div>
+  <div class="sec-sub">Every hostel booking in one place</div>
+  <div class="stay-grid">
+
+    <div class="stay-card">
+      <div class="stay-top">
+        <div class="stay-dot" style="background:#888"></div>
+        <div class="stay-info">
+          <div class="stay-hostel">Bovisa Urban Garden</div>
+          <div class="stay-city">Milan, Italy</div>
+        </div>
+      </div>
+      <div class="stay-dates-badge">📅 Jun 19 – 20, 2026</div>
+      <div class="stay-addr">Pre-trip stopover in Milan before flying to Lisbon</div>
+      <div class="act-links">
+        <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577622309" target="_blank">📋 View Booking</a>
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-top">
+        <div class="stay-dot" style="background:var(--lis)"></div>
+        <div class="stay-info">
+          <div class="stay-hostel">We Hate F Tourists</div>
+          <div class="stay-city">Lisbon, Portugal</div>
+        </div>
+      </div>
+      <div class="stay-dates-badge">📅 Jun 20 – 23, 2026</div>
+      <div class="stay-addr">3 nights in Lisbon</div>
+      <div class="act-links">
+        <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873419" target="_blank">📋 View Booking</a>
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-top">
+        <div class="stay-dot" style="background:var(--sev)"></div>
+        <div class="stay-info">
+          <div class="stay-hostel">Urban Cube Hostel Sevilla</div>
+          <div class="stay-city">Seville, Spain</div>
+        </div>
+      </div>
+      <div class="stay-dates-badge">📅 Jun 23 – 25, 2026</div>
+      <div class="stay-addr">2 nights in Seville</div>
+      <div class="act-links">
+        <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873516" target="_blank">📋 View Booking</a>
+      </div>
+    </div>
+
+    <div class="stay-card">
+      <div class="stay-top">
+        <div class="stay-dot" style="background:var(--mad)"></div>
+        <div class="stay-info">
+          <div class="stay-hostel">Generator Madrid</div>
+          <div class="stay-city">Madrid, Spain</div>
+        </div>
+      </div>
+      <div class="stay-dates-badge">📅 Jun 25 – 29, 2026</div>
+      <div class="stay-addr">4 nights in Madrid</div>
+      <div class="act-links">
+        <a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873573" target="_blank">📋 View Booking</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ BOOKINGS ══════════ -->
+<section id="bookings" class="sec-block">
+  <div class="sec-title">📋 Must Book Now</div>
+  <div class="sec-sub">Sell out weeks in advance — act before you travel</div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--lis-l)">🟢 Lisbon</div>
+    <div class="bk-row"><span class="bk-name">⛪ Jerónimos Monastery — Timed Entry</span><span class="bk-price">€10</span><a class="btn btn-book" href="https://www.jeronimosmonasterytickets.com/?ci=1&cm=23354272256__c_x____Cj0KCQjw54nRBhDCARIsAMcY_SCpHzybWNAyjzIShOoApWl53QpPMUpBgVpYmsRvlxq5NqmP77SdPs4aArzYEALw_wcB&gad_source=1&gad_campaignid=23475707163&gbraid=0AAAAACRC4b3v6JSor1ucsI7CDgsHXhz6W&gclid=Cj0KCQjw54nRBhDCARIsAMcY_SCpHzybWNAyjzIShOoApWl53QpPMUpBgVpYmsRvlxq5NqmP77SdPs4aArzYEALw_wcB" target="_blank">Book</a></div>
+    <div class="bk-row"><span class="bk-name">🏰 Pena Palace, Sintra</span><span class="bk-price">~€14</span><a class="btn btn-book" href="https://www.getyourguide.com/sintra-l99/pena-palace-park-skip-the-line-entrance-ticket-t79596/" target="_blank">Book</a></div>
+  </div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--sev-l)">🔴 Seville</div>
+    <div class="bk-row"><span class="bk-name">🏯 Real Alcázar — Timed Entry</span><span class="bk-price">€15.50</span><a class="btn btn-book" href="https://ticketrealalcazar.com/en/" target="_blank">Book</a></div>
+    <div class="bk-row"><span class="bk-name">⛪ Cathedral + Giralda Tower</span><span class="bk-price">€13</span><a class="btn btn-book" href="https://catedraldesevilla.servitickets.es/" target="_blank">Book</a></div>
+  </div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--mad-l)">🟤 Madrid</div>
+    <div class="bk-row"><span class="bk-name">🖼 Prado Museum — Timed Entry</span><span class="bk-price">€15</span><a class="btn btn-book" href="https://entradas.museodelprado.es/" target="_blank">Book</a></div>
+    <div class="bk-row"><span class="bk-name">🚄 Toledo Train — Renfe RT</span><span class="bk-price">~€13</span><a class="btn btn-book" href="https://www.renfe.com/es/en" target="_blank">Book</a></div>
+    <div class="bk-row"><span class="bk-name">✈ Delta DL109 — Check-in</span><span class="bk-price">MAD→ATL</span><a class="btn btn-book" href="https://www.delta.com" target="_blank">delta.com</a></div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ TICKETS ══════════ -->
+<section id="tickets" class="sec-block" style="padding-top:4px">
+  <div class="sec-title">🎟 All Ticket Links</div>
+  <div class="sec-sub">Every attraction — verified working links only</div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--lis-l)">🟢 Lisbon</div>
+    <div class="bk-row"><span class="bk-name">Mesa de Frades (Fado dinner)</span><a class="btn btn-tix" href="https://mesadefrades.pt/en/" target="_blank">mesadefrades.pt</a></div>
+    <div class="bk-row"><span class="bk-name">Jerónimos Monastery + Torre de Belém</span><a class="btn btn-tix" href="https://bilheteira.patrimoniocultural.pt/pos/event/list" target="_blank">Official Portal</a></div>
+    <div class="bk-row"><span class="bk-name">Time Out Market (no ticket needed)</span><a class="btn btn-tix" href="https://www.timeoutmarket.com/lisboa/en/" target="_blank">Website</a></div>
+    <div class="bk-row"><span class="bk-name">Pena Palace – Sintra</span><a class="btn btn-tix" href="https://www.getyourguide.com/sintra-l99/pena-palace-park-skip-the-line-entrance-ticket-t79596/" target="_blank">GetYourGuide</a></div>
+    <div class="bk-row"><span class="bk-name">Quinta da Regaleira</span><a class="btn btn-tix" href="https://www.getyourguide.com/sintra-l99/entry-tickets-tc123/" target="_blank">GetYourGuide</a></div>
+  </div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--sev-l)">🔴 Seville</div>
+    <div class="bk-row"><span class="bk-name">Real Alcázar (Official)</span><a class="btn btn-tix" href="https://alcazarsevilla.org/" target="_blank">alcazarsevilla.org</a></div>
+    <div class="bk-row"><span class="bk-name">Real Alcázar (Buy Tickets)</span><a class="btn btn-tix" href="https://ticketrealalcazar.com/en/" target="_blank">ticketrealalcazar.com</a></div>
+    <div class="bk-row"><span class="bk-name">Seville Cathedral + Giralda</span><a class="btn btn-tix" href="https://catedraldesevilla.servitickets.es/" target="_blank">Official Tickets</a></div>
+    <div class="bk-row"><span class="bk-name">Flamenco Shows</span><a class="btn btn-tix" href="https://www.getyourguide.com/seville-l189/entry-tickets-tc123/" target="_blank">GetYourGuide</a></div>
+    <div class="bk-row"><span class="bk-name">AVE Train SVQ→MAD (Confirmed ✓)</span><a class="btn btn-tix" href="https://www.renfe.com/es/en" target="_blank">renfe.com</a></div>
+  </div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:var(--mad-l)">🟤 Madrid</div>
+    <div class="bk-row"><span class="bk-name">Prado Museum</span><a class="btn btn-tix" href="https://entradas.museodelprado.es/" target="_blank">Official Tickets</a></div>
+    <div class="bk-row"><span class="bk-name">El Rastro (free — no ticket)</span><a class="btn btn-tix" href="https://www.esmadrid.com/en/tourist-information/el-rastro" target="_blank">Info</a></div>
+    <div class="bk-row"><span class="bk-name">Toledo Train — Renfe</span><a class="btn btn-tix" href="https://www.renfe.com/es/en" target="_blank">renfe.com</a></div>
+    <div class="bk-row"><span class="bk-name">Azotea Círculo Bellas Artes</span><a class="btn btn-tix" href="https://www.circulodebellasartes.com/en/azotea/" target="_blank">Website</a></div>
+    <div class="bk-row"><span class="bk-name">Delta DL109 MAD→ATL</span><a class="btn btn-tix" href="https://www.delta.com" target="_blank">delta.com</a></div>
+  </div>
+
+  <div class="bk-group">
+    <div class="bk-label" style="color:#a0c4ff">🏠 Hostels</div>
+    <div class="bk-row"><span class="bk-name">Bovisa Urban Garden (Milan)</span><a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577622309" target="_blank">View</a></div>
+    <div class="bk-row"><span class="bk-name">We Hate F Tourists (Lisbon)</span><a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873419" target="_blank">View</a></div>
+    <div class="bk-row"><span class="bk-name">Urban Cube Hostel (Seville)</span><a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873516" target="_blank">View</a></div>
+    <div class="bk-row"><span class="bk-name">Generator Madrid</span><a class="btn btn-hostel" href="https://www.hostelworld.com/pwa/account/trip/577873573" target="_blank">View</a></div>
+  </div>
+</section>
+<div class="divider"></div>
+
+<!-- ══════════ TIPS ══════════ -->
+<section id="tips" class="sec-block" style="padding-top:4px">
+  <div class="sec-title">💡 Tips + Transport</div>
+  <div class="sec-sub">Cards to buy, things to know, mistakes to avoid</div>
+
+  <!-- LISBON TRANSPORT CARD -->
+  <div class="transport-card">
+    <div class="transport-top">
+      <div class="transport-icon">🟢</div>
+      <div><div class="transport-title">Lisbon — Viva Viagem Card</div><div class="transport-sub">Buy at Metro station on arrival</div></div>
+    </div>
+    <div class="transport-desc">Works on Metro, buses, trams (Tram 28 & 15E), ferries, and the CP train to Sintra. Each person needs their own card. Buy at any Metro ticket machine when you land — card costs €0.50, then load credit.</div>
+    <div class="transport-facts">
+      <div class="t-fact"><span class="t-lbl">Card cost</span><span class="t-val">€0.50 (non-refundable)</span></div>
+      <div class="t-fact"><span class="t-lbl">Single ride</span><span class="t-val">€1.90 (Metro + bus/tram)</span></div>
+      <div class="t-fact"><span class="t-lbl">24h pass</span><span class="t-val">~€6.15 (unlimited)</span></div>
+      <div class="t-fact"><span class="t-lbl">Sintra train</span><span class="t-val">€2.30 RT from Rossio</span></div>
+      <div class="t-fact"><span class="t-lbl">Buy at</span><span class="t-val">Any Metro station machine</span></div>
+    </div>
+    <a class="btn btn-tix" href="https://www.lisbonguru.com/viva-viagem-card-metro-bus-tram-ferry-train/" target="_blank">📖 Full guide</a>
+  </div>
+
+  <!-- MADRID TRANSPORT CARD -->
+  <div class="transport-card">
+    <div class="transport-top">
+      <div class="transport-icon">🟤</div>
+      <div><div class="transport-title">Madrid — Tarjeta Multi</div><div class="transport-sub">Buy at Atocha when you arrive from Seville</div></div>
+    </div>
+    <div class="transport-desc">Madrid's rechargeable card for Metro, buses, and light rail. Valid 10 years. One card can serve two people if you load 10-trip tickets — tap each person through the gate one by one. Buy from red-stickered machines at any Metro station.</div>
+    <div class="transport-facts">
+      <div class="t-fact"><span class="t-lbl">Card cost</span><span class="t-val">€2.50 (one-time, reusable)</span></div>
+      <div class="t-fact"><span class="t-lbl">10 trips</span><span class="t-val">€7.30 — best value for 4 nights</span></div>
+      <div class="t-fact"><span class="t-lbl">Single ride</span><span class="t-val">€1.50–€2.00 (Zone A)</span></div>
+      <div class="t-fact"><span class="t-lbl">Airport</span><span class="t-val">+€3 surcharge on Line 8 to MAD</span></div>
+      <div class="t-fact"><span class="t-lbl">Buy at</span><span class="t-val">Any Metro station machine</span></div>
+    </div>
+    <a class="btn btn-tix" href="https://www.esmadrid.com/en/getting-around-madrid-metro" target="_blank">📖 Metro guide</a>
+  </div>
+
+  <!-- LISBON TIPS -->
+  <div class="tips-city">
+    <div class="tips-hdr"><div class="tips-dot" style="background:var(--lis)"></div><div class="tips-name">Lisbon</div></div>
+    <div class="tip-list">
+      <div class="tip-row"><div class="tip-icon">💶</div><div class="tip-text"><strong>Currency:</strong> Euro · Cards everywhere · Multibanco ATMs for cash</div></div>
+      <div class="tip-row"><div class="tip-icon">📱</div><div class="tip-text"><strong>eSIM:</strong> Airalo EU eSIM — activate before landing for immediate data</div></div>
+      <div class="tip-row"><div class="tip-icon">🛂</div><div class="tip-text"><strong>Schengen:</strong> 90-day clock starts at first EU entry — Milan (MXP) counts as Day 1</div></div>
+      <div class="tip-row alert"><div class="tip-icon">⚠️</div><div class="tip-text"><strong>Pickpockets:</strong> Tram 28 is notorious — bag in front, no back pockets when boarding</div></div>
+      <div class="tip-row"><div class="tip-icon">🗣</div><div class="tip-text"><strong>Language:</strong> "Obrigado" (m) / "Obrigada" (f) = thank you · Portuguese ≠ Spanish</div></div>
+      <div class="tip-row"><div class="tip-icon">🚂</div><div class="tip-text"><strong>Sintra:</strong> Leave Lisbon before 9am — it's swamped by 10:30am every summer morning</div></div>
+      <div class="tip-row"><div class="tip-icon">🍮</div><div class="tip-text"><strong>Don't miss:</strong> Pastel de nata from Pastéis de Belém bakery right next to Jerónimos (line moves fast)</div></div>
+    </div>
+  </div>
+
+  <!-- SEVILLE TIPS -->
+  <div class="tips-city">
+    <div class="tips-hdr"><div class="tips-dot" style="background:var(--sev)"></div><div class="tips-name">Seville</div></div>
+    <div class="tip-list">
+      <div class="tip-row alert"><div class="tip-icon">🌡</div><div class="tip-text"><strong>Heat:</strong> June avg 35°C+ (95°F). Sightsee before noon and after 6pm. Siesta 2–5pm. Hydrate.</div></div>
+      <div class="tip-row"><div class="tip-icon">🛴</div><div class="tip-text"><strong>Transport:</strong> Old city is walkable · Lime/Bird scooters · Uber and taxis reliable and cheap</div></div>
+      <div class="tip-row"><div class="tip-icon">💶</div><div class="tip-text"><strong>Currency:</strong> Euro · Tap-to-pay everywhere including tapas bars</div></div>
+      <div class="tip-row alert"><div class="tip-icon">⚠️</div><div class="tip-text"><strong>Pickpockets:</strong> Heavy around Cathedral entrance and Santa Cruz tourist zones</div></div>
+      <div class="tip-row"><div class="tip-icon">🕘</div><div class="tip-text"><strong>Culture:</strong> Dinner 9–10pm · "Gracias" / "Hola" · Everything moves slower — lean into it</div></div>
+      <div class="tip-row"><div class="tip-icon">🍺</div><div class="tip-text"><strong>Drink:</strong> Order a Rebujito (sherry + lemon Fanta) — Seville's classic summer drink, €2–3</div></div>
+    </div>
+  </div>
+
+  <!-- MADRID TIPS -->
+  <div class="tips-city">
+    <div class="tips-hdr"><div class="tips-dot" style="background:var(--mad)"></div><div class="tips-name">Madrid</div></div>
+    <div class="tip-list">
+      <div class="tip-row"><div class="tip-icon">🚇</div><div class="tip-text"><strong>Metro:</strong> Buy Tarjeta Multi + 10-trip (€2.50 + €7.30) at Atocha on arrival. Runs until 1:30am.</div></div>
+      <div class="tip-row"><div class="tip-icon">💶</div><div class="tip-text"><strong>Currency:</strong> Cards everywhere · Some old bars prefer cash — keep €20 on you</div></div>
+      <div class="tip-row alert"><div class="tip-icon">⚠️</div><div class="tip-text"><strong>Pickpockets:</strong> Sol, Gran Vía, and El Rastro — anti-theft crossbody, no back pockets</div></div>
+      <div class="tip-row"><div class="tip-icon">🌙</div><div class="tip-text"><strong>Culture:</strong> Restaurants fill at 10pm, bars peak at midnight, clubs open at 2am. Embrace it.</div></div>
+      <div class="tip-row"><div class="tip-icon">🚄</div><div class="tip-text"><strong>Toledo:</strong> Book Renfe ahead online — weekend seats go fast. Only 33 min from Atocha.</div></div>
+      <div class="tip-row"><div class="tip-icon">✈️</div><div class="tip-text"><strong>Airport Jun 29:</strong> Metro Line 8 to airport ~30 min (€5 + €3 surcharge). Be there 3 hrs early.</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-title">bon voyage ✈</div>
+  <div class="footer-sub">Alexander + Friend · Jun 20–29, 2026<br>Lisbon · Seville · Madrid → Atlanta<br><span style="font-size:11px;opacity:.5">Delta DL109 nonstop home ✓</span></div>
+</footer>
+
+<script>
+function toggle(hdr) {
+  const card = hdr.closest('.day-card');
+  const open = card.classList.toggle('open');
+  hdr.querySelector('.chev').style.transform = open ? 'rotate(90deg)' : '';
+}
+document.querySelectorAll('.day-card.open').forEach(c => {
+  c.querySelector('.chev').style.transform = 'rotate(90deg)';
+});
+
+function toggleAlt(btn) {
+  const altDay = btn.closest('.day-body').querySelector('.alt-day');
+  const isHidden = altDay.style.display === 'none';
+  altDay.style.display = isHidden ? 'block' : 'none';
+  btn.textContent = isHidden ? '✖ Hide Alternative Day' : '🔀 Show Alternative Day';
+}
+
+const tabs = document.querySelectorAll('.nav-tab');
+const secs = ['lis','sev','mad','stays','bookings','tickets','tips']
+  .map(id => document.getElementById(id)).filter(Boolean);
+
+function updateNav() {
+  const y = window.scrollY + 80;
+  let cur = secs[0];
+  for (const s of secs) { if (s.offsetTop <= y) cur = s; }
+  tabs.forEach(t => {
+    const href = t.getAttribute('href').replace('#','');
+    t.classList.toggle('active', cur.id === href);
+  });
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
+tabs.forEach(t => t.addEventListener('click', () => {
+  setTimeout(() => t.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' }), 100);
+}));
+</script>
+</body>
+</html>
